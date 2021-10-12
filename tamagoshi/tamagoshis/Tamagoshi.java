@@ -71,6 +71,27 @@ public class Tamagoshi {
         }
     }
 
+    public boolean consommeEnergy() {
+        this.energy--;
+        if (this.energy <= 0) {
+            System.out.println(this.getName() + " : Arrrrrggh !");
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public boolean consommeFun() {
+        this.fun--;
+        if (this.fun <= 0) {
+            System.out.println(this.getName() + " : Je fais une dépression, ciao !");
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    @Deprecated
     public boolean consommeRessources() {
         this.energy--;
         this.fun--;

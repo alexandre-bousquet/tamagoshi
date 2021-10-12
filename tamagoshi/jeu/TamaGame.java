@@ -4,6 +4,7 @@ import tamagoshi.tamagoshis.Tamagoshi;
 import tamagoshi.util.User;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class TamaGame {
     private ArrayList<Tamagoshi> listeTamagoshisDepart;
@@ -21,7 +22,7 @@ public class TamaGame {
     }
 
     public void initialisation() {
-        System.out.println("Entrez le nombre de tamagoshi.tamagoshis désiré : ");
+        System.out.println("Entrez le nombre de tamagoshis désiré : ");
         int nbTamagoshi = Integer.parseInt(User.saisieClavier());
         while (nbTamagoshi <= 0) {
             System.out.println("Bon fait un effort on te demande juste un entier positif là !");
@@ -29,7 +30,15 @@ public class TamaGame {
         }
         for (int i = 0; i < nbTamagoshi; i++) {
             System.out.println("Entrez le nom du tamagoshi numéro " + i + " : ");
-            Tamagoshi t = new Tamagoshi(User.saisieClavier());
+            double rand = Math.random();
+            Tamagoshi t;
+            if (rand <= 0.45) {
+                t = new GrosJoueur(User.saisieClavier());
+            } else if (rand > 0.45 && rand <= 0.9) {
+                t = new GrosMangeur(User.saisieClavier());
+            } else {
+                t = new ConnardJoueur(User.saisieClavier());
+            }
             this.listeTamagoshisDepart.add(t);
             this.listeTamagoshisEnCours.add(t);
         }
@@ -50,7 +59,9 @@ public class TamaGame {
             this.nourrir();
             this.jouer();
             for (Tamagoshi t : this.listeTamagoshisEnCours) {
-                t.consommeRessources();
+                //t.consommeRessources();
+                t.consommeEnergy();
+                t.consommeFun();
                 t.vieillir();
             }
             cycle++;
@@ -99,11 +110,12 @@ public class TamaGame {
     public void resultat() {
         for (Tamagoshi t : this.listeTamagoshisDepart) {
             if (this.listeTamagoshisEnCours.contains(t)) {
-                System.out.println(t.getName() + " a survécu et vous remercie :)");
+                System.out.println(t.getName() + " qui était un " + t.getClass().getSimpleName() + " a survécu et vous remercie :)");
             } else {
-                System.out.println(t.getName() + " n'est pas arrivé au bout et ne vous félicite pas :(");
+                System.out.println(t.getName() + " qui était un " + t.getClass().getSimpleName() + " n'est pas arrivé au bout et ne vous félicite pas :(");
             }
         }
+        System.out.println("Niveau de difficulté : " + this.listeTamagoshisDepart.size());
         System.out.println("Score obtenu : " + this.score() + "%");
     }
 
