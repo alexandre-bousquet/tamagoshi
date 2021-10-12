@@ -4,11 +4,14 @@ import tamagoshi.tamagoshis.Tamagoshi;
 import tamagoshi.util.User;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
+import java.util.Scanner;
 
 public class TamaGame {
     private ArrayList<Tamagoshi> listeTamagoshisDepart;
     private ArrayList<Tamagoshi> listeTamagoshisEnCours;
+    private ArrayList<String> names = new ArrayList<>();
 
     public TamaGame() {
         this.listeTamagoshisDepart = new ArrayList<>();
@@ -22,6 +25,15 @@ public class TamaGame {
     }
 
     public void initialisation() {
+        Scanner scan = new Scanner(TamaGame.class.getResourceAsStream("/tamagoshi/names.txt"));
+        int ligne = 1;
+        while (scan.hasNextLine()) {
+            String nom = scan.nextLine();
+            names.add(nom);
+            ligne++;
+        }
+        scan.close();
+        Collections.shuffle(names);
         System.out.println("Entrez le nombre de tamagoshis désiré : ");
         int nbTamagoshi = Integer.parseInt(User.saisieClavier());
         while (nbTamagoshi <= 0) {
@@ -29,15 +41,17 @@ public class TamaGame {
             nbTamagoshi = Integer.parseInt(User.saisieClavier());
         }
         for (int i = 0; i < nbTamagoshi; i++) {
-            System.out.println("Entrez le nom du tamagoshi numéro " + i + " : ");
             double rand = Math.random();
+            int indexName = new Random().nextInt(names.size());
+            String name = names.get(indexName);
+            names.remove(indexName);
             Tamagoshi t;
             if (rand <= 0.45) {
-                t = new GrosJoueur(User.saisieClavier());
+                t = new GrosJoueur(name);
             } else if (rand > 0.45 && rand <= 0.9) {
-                t = new GrosMangeur(User.saisieClavier());
+                t = new GrosMangeur(name);
             } else {
-                t = new ConnardJoueur(User.saisieClavier());
+                t = new ConnardJoueur(name);
             }
             this.listeTamagoshisDepart.add(t);
             this.listeTamagoshisEnCours.add(t);
