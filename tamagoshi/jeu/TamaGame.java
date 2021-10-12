@@ -23,6 +23,10 @@ public class TamaGame {
     public void initialisation() {
         System.out.println("Entrez le nombre de tamagoshi.tamagoshis désiré : ");
         int nbTamagoshi = Integer.parseInt(User.saisieClavier());
+        while (nbTamagoshi <= 0) {
+            System.out.println("Bon fait un effort on te demande juste un entier positif là !");
+            nbTamagoshi = Integer.parseInt(User.saisieClavier());
+        }
         for (int i = 0; i < nbTamagoshi; i++) {
             System.out.println("Entrez le nom du tamagoshi numéro " + i + " : ");
             Tamagoshi t = new Tamagoshi(User.saisieClavier());
@@ -35,17 +39,15 @@ public class TamaGame {
         this.initialisation();
         int cycle = 1;
         while (!this.listeTamagoshisEnCours.isEmpty() && cycle <= Tamagoshi.getLifeTime()) {
-            System.out.println("------------ Cycle n°" + cycle + "-------------");
-            this.listeTamagoshisEnCours.removeIf(t -> t.getEnergy() <= 0 || t.getFun() <= 0 || t.getAge() >= Tamagoshi.getLifeTime() );
+            System.out.println("------------ Cycle n°" + cycle + " ------------");
+            this.listeTamagoshisEnCours.removeIf(t -> t.getEnergy() <= 0 || t.getFun() <= 0 || t.getAge() >= Tamagoshi.getLifeTime());
             if (this.listeTamagoshisEnCours.isEmpty()) {
                 break;
             }
             for (Tamagoshi t : this.listeTamagoshisEnCours) {
                 t.parler();
             }
-            System.out.println("Nourrir quel tamagoshi ?");
             this.nourrir();
-            System.out.println("Jouer avec quel tamagoshi ?");
             this.jouer();
             for (Tamagoshi t : this.listeTamagoshisEnCours) {
                 t.consommeRessources();
@@ -53,16 +55,18 @@ public class TamaGame {
             }
             cycle++;
         }
-        System.out.println("------------ Fin de partie -------------");
+        System.out.println("------------- Fin de partie ------------");
         System.out.println("------------ Bilan -------------");
         this.resultat();
     }
 
     public void nourrir() {
+        System.out.println("Nourrir quel tamagoshi ?");
         this.getTamagoshiAction().mange();
     }
 
     public void jouer() {
+        System.out.println("Jouer avec quel tamagoshi ?");
         this.getTamagoshiAction().joue();
     }
 
@@ -73,21 +77,14 @@ public class TamaGame {
             count++;
         }
         System.out.println("Entrez un choix : ");
-        int tamagoshi = Integer.parseInt(User.saisieClavier());
-        if (tamagoshi > this.listeTamagoshisEnCours.size() - 1) {
-            while (tamagoshi > this.listeTamagoshisEnCours.size()) {
+        int tamagoshiSelected = Integer.parseInt(User.saisieClavier());
+        if (tamagoshiSelected > this.listeTamagoshisEnCours.size() - 1) {
+            while (tamagoshiSelected > this.listeTamagoshisEnCours.size() - 1) {
                 System.out.println("Choix de tamagoshi invalide !");
-                tamagoshi = Integer.parseInt(User.saisieClavier());
+                tamagoshiSelected = Integer.parseInt(User.saisieClavier());
             }
         }
-        return this.listeTamagoshisEnCours.get(tamagoshi);
-    }
-
-    public void afficherTamagochisEnCours() {
-        /*String affichage = "";
-        for (int i = 0; i < this.listeTamagoshisEnCours.size(); i++) {
-            affichage += "(" + i + ") " + this.listeTamagoshisEnCours.get(i).getName();
-        }*/
+        return this.listeTamagoshisEnCours.get(tamagoshiSelected);
     }
 
     public int score() {
@@ -100,8 +97,8 @@ public class TamaGame {
     }
 
     public void resultat() {
-        for (Tamagoshi t : this.listeTamagoshisEnCours) {
-            if (this.listeTamagoshisDepart.contains(t)) {
+        for (Tamagoshi t : this.listeTamagoshisDepart) {
+            if (this.listeTamagoshisEnCours.contains(t)) {
                 System.out.println(t.getName() + " a survécu et vous remercie :)");
             } else {
                 System.out.println(t.getName() + " n'est pas arrivé au bout et ne vous félicite pas :(");
