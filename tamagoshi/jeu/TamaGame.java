@@ -36,10 +36,12 @@ public class TamaGame {
         Collections.shuffle(names);
         System.out.println("Entrez le nombre de tamagoshis désiré : ");
         int nbTamagoshi = Integer.parseInt(User.saisieClavier());
-        while (nbTamagoshi <= 0) {
+        System.out.println("Entrez la durée de vie des tamagoshis : ");
+        Tamagoshi.setLifeTime(Integer.parseInt(User.saisieClavier()));
+        /*while (nbTamagoshi <= 0) {
             System.out.println("Bon fait un effort on te demande juste un entier positif là !");
             nbTamagoshi = Integer.parseInt(User.saisieClavier());
-        }
+        }*/
         for (int i = 0; i < nbTamagoshi; i++) {
             double rand = Math.random();
             int indexName = new Random().nextInt(names.size());

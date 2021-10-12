@@ -134,6 +134,10 @@ public class Tamagoshi {
         return name;
     }
 
+    public static void setLifeTime(int lifeTime) {
+        Tamagoshi.lifeTime = lifeTime;
+    }
+
     @Override
     public String toString() {
         return name + "{" +
