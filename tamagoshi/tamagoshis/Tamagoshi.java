@@ -6,8 +6,17 @@ import java.util.Random;
  * Tamagoshi lambda.
  */
 public class Tamagoshi {
+    /**
+     * Ege du tamagoshi.
+     */
     private int age;
+    /**
+     * Energie maximale d'un tamagoshi.
+     */
     private int maxEnergy;
+    /**
+     * Energie du tamagoshi (ne peut être supérieure à maxEnergy).
+     */
     private int energy;
     private String name;
     private static int lifeTime;
