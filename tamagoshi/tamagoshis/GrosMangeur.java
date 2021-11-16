@@ -1,7 +1,8 @@
-package tamagoshi.jeu;
+package tamagoshi.tamagoshis;
 
-import tamagoshi.tamagoshis.Tamagoshi;
-
+/**
+ * Tamagoshi qui consomme deux fois plus d'énergie que les autres.
+ */
 public class GrosMangeur extends Tamagoshi {
     public GrosMangeur(String name) {
         super(name);

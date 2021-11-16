@@ -2,13 +2,15 @@ package tamagoshi.tamagoshis;
 
 import java.util.Random;
 
+/**
+ * Tamagoshi lambda.
+ */
 public class Tamagoshi {
     private int age;
     private int maxEnergy;
     private int energy;
     private String name;
-    private static int lifeTime = 10;
-    private Random random;
+    private static int lifeTime;
     private int fun;
     private int maxFun;
 
@@ -27,6 +29,10 @@ public class Tamagoshi {
         this.name = name;
     }
 
+    /**
+     * Le tamagoshi exprime dans quel état il est
+     * @return boolean
+     */
     public boolean parler() {
         if (this.energy > 4 && this.fun > 4) {
             System.out.println(this.getName() + " : Tout va bien pour le moment !");
@@ -43,6 +49,10 @@ public class Tamagoshi {
         }
     }
 
+    /**
+     * Remonte l'énergie du tamagoshi.
+     * @return boolean
+     */
     public boolean mange() {
         if (this.energy < this.maxEnergy) {
             this.setEnergy(this.energy + (new Random().nextInt(3) + 1));
@@ -57,11 +67,15 @@ public class Tamagoshi {
         }
     }
 
+    /**
+     * Remonte le fun du tamagoshi.
+     * @return boolean
+     */
     public boolean joue() {
-        if (this.fun < this.maxFun) {
-            this.setFun(this.fun + (new Random().nextInt(3) + 1));
-            if (this.fun > this.maxFun) {
-                this.setFun(this.maxFun);
+        if (this.getFun() < this.getMaxFun()) {
+            this.setFun(this.getFun() + (new Random().nextInt(3) + 1));
+            if (this.getFun() > this.getMaxFun()) {
+                this.setFun(this.getMaxFun());
             }
             System.out.println(this.getName() + " : On se marre HAHAHA (cringe) !");
             return true;
@@ -71,6 +85,10 @@ public class Tamagoshi {
         }
     }
 
+    /**
+     * Baisse le l'énergie du tamagoshi.
+     * @return boolean
+     */
     public boolean consommeEnergy() {
         this.energy--;
         if (this.energy <= 0) {
@@ -81,6 +99,10 @@ public class Tamagoshi {
         }
     }
 
+    /**
+     * Baisse le le fun du tamagoshi.
+     * @return boolean
+     */
     public boolean consommeFun() {
         this.fun--;
         if (this.fun <= 0) {
@@ -106,10 +128,14 @@ public class Tamagoshi {
         }
     }
 
+    /**
+     * Augmente l'âge du tamagoshi.
+     */
     public void vieillir() {
         this.age++;
     }
 
+    // Getters & Setters
     public void setEnergy(int energy) {
         this.energy = energy;
     }
@@ -130,12 +156,24 @@ public class Tamagoshi {
         return fun;
     }
 
+    public int getMaxEnergy() {
+        return maxEnergy;
+    }
+
+    public int getMaxFun() {
+        return maxFun;
+    }
+
     public String getName() {
         return name;
     }
 
     public static void setLifeTime(int lifeTime) {
         Tamagoshi.lifeTime = lifeTime;
+    }
+
+    public static int getLifeTime() {
+        return lifeTime;
     }
 
     @Override
@@ -147,10 +185,6 @@ public class Tamagoshi {
                 ", maxFun=" + this.maxFun +
                 ", fun=" + this.fun +
                 '}';
-    }
-
-    public static int getLifeTime() {
-        return lifeTime;
     }
 
     public static void main(String[] args) {

@@ -1,9 +1,10 @@
-package tamagoshi.jeu;
+package tamagoshi.tamagoshis;
 
-import tamagoshi.tamagoshis.Tamagoshi;
-
-public class ConnardJoueur extends Tamagoshi {
-    public ConnardJoueur(String name) {
+/**
+ * Tamagoshi qui n'indique pas comment il va.
+ */
+public class Cachotier extends Tamagoshi {
+    public Cachotier(String name) {
         super(name);
     }
 
