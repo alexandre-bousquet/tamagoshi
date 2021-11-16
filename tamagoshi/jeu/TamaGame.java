@@ -6,13 +6,27 @@ import tamagoshi.util.User;
 import java.util.*;
 
 /**
- * Classe de jeu
+ * Classe de jeu.
  */
 public class TamaGame {
+    /**
+     * Liste des tamagoshis créer au départ du jeu.
+     */
     private ArrayList<Tamagoshi> listeTamagoshisDepart;
+
+    /**
+     * Liste des tamagoshis vivants à l'instant T.
+     */
     private ArrayList<Tamagoshi> listeTamagoshisEnCours;
+
+    /**
+     * Liste des noms possibles pour les tamagoshis.
+     */
     private ArrayList<String> names = new ArrayList<>();
 
+    /**
+     * Classe du jeu
+     */
     public TamaGame() {
         this.listeTamagoshisDepart = new ArrayList<>();
         this.listeTamagoshisEnCours = new ArrayList<>();

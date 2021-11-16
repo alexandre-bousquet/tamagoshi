@@ -113,6 +113,10 @@ public class Tamagoshi {
         }
     }
 
+    /**
+     * @deprecated car deux autres fonctions font son travail.
+     * @return boolean
+     */
     @Deprecated
     public boolean consommeRessources() {
         this.energy--;
