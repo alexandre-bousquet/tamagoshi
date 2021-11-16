@@ -49,16 +49,16 @@ public class TamaGame {
      * Initialise les tamagoshis du jeu.
      */
     public void initTamagoshis() {
-        int nbTamagoshi;
+        int nbTamagoshis;
         try {
             System.out.println("Entrez le nombre de tamagoshis désiré : ");
-            nbTamagoshi = Integer.parseInt(User.saisieClavier());
+            nbTamagoshis = Integer.parseInt(User.saisieClavier());
         } catch (IllegalArgumentException e) {
             System.out.println("Erreur dans l'entrée du nombre de tamagoshis : " + e.getMessage() + " (un entier était attendu)");
             System.out.println("Nombre de tamagoshis par défaut appliqué (3)");
-            nbTamagoshi = 3;
+            nbTamagoshis = 3;
         }
-        for (int i = 0; i < nbTamagoshi; i++) {
+        for (int i = 0; i < nbTamagoshis; i++) {
             double rand = Math.random();
             int indexName = new Random().nextInt(this.names.size());
             String name = this.names.get(indexName);
@@ -131,7 +131,7 @@ public class TamaGame {
     }
 
     /**
-     * Demande à l'utilisateur de choisir un tamagoshi à nourrir.
+     * Demande à l'utilisateur de saisir un tamagoshi à nourrir.
      */
     public void nourrir() {
         System.out.println("Nourrir quel tamagoshi ?");
@@ -139,7 +139,7 @@ public class TamaGame {
     }
 
     /**
-     * Demande à l'utilisateur de choisir un tamagoshi avec lequel jouer.
+     * Demande à l'utilisateur de saisir un tamagoshi avec lequel jouer.
      */
     public void jouer() {
         System.out.println("Jouer avec quel tamagoshi ?");
@@ -147,7 +147,7 @@ public class TamaGame {
     }
 
     /**
-     * Fonction qui retourne le tamagoshi entré par l'utilisateur au clavier.
+     * Fonction qui retourne le tamagoshi dont le numéro est saisis par l'utilisateur au clavier.
      * @return Tamagoshi
      */
     public Tamagoshi getTamagoshiAction() {
@@ -169,7 +169,8 @@ public class TamaGame {
 
     /**
      * Calcule le score et le retourne.
-     * @return int
+     * Il égal à ((âge des tamagoshis en vie * 100) / âge total de tous les tamagoshis)
+     * @return {int}
      */
     public int score() {
         int maxAge = Tamagoshi.getLifeTime() * this.listeTamagoshisDepart.size();
@@ -181,7 +182,7 @@ public class TamaGame {
     }
 
     /**
-     * Affiche le résultat de la partie.
+     * Affiche le score, la difficulté et l'état de chaque tamagoshi à la fin de la partie.
      */
     public void resultat() {
         for (Tamagoshi t : this.listeTamagoshisDepart) {
@@ -195,6 +196,10 @@ public class TamaGame {
         System.out.println("Score obtenu : " + this.score() + "%");
     }
 
+    /**
+     *
+     * @return {String} Données de la partie
+     */
     @Override
     public String toString() {
         return "TamaGame : " + "\n" +

@@ -30,7 +30,7 @@ public class Tamagoshi {
     }
 
     /**
-     * Le tamagoshi exprime dans quel état il est
+     * Le tamagoshi exprime dans quel état il est.
      * @return boolean
      */
     public boolean parler() {
@@ -86,7 +86,7 @@ public class Tamagoshi {
     }
 
     /**
-     * Baisse le l'énergie du tamagoshi.
+     * Baisse l'énergie du tamagoshi.
      * @return boolean
      */
     public boolean consommeEnergy() {
@@ -100,7 +100,7 @@ public class Tamagoshi {
     }
 
     /**
-     * Baisse le le fun du tamagoshi.
+     * Baisse le fun du tamagoshi.
      * @return boolean
      */
     public boolean consommeFun() {
