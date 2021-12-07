@@ -68,7 +68,7 @@ public class TamaGame {
                 t = new GrosJoueur(name);
             } else if (rand > 0.40 && rand <= 0.8) {
                 t = new GrosMangeur(name);
-            } else if (rand > 0.40 && rand <= 0.9) {
+            } else if (rand > 0.80 && rand <= 0.9) {
                 t = new Cachotier(name);
             } else {
                 t = new Bipolaire(name);
@@ -87,7 +87,7 @@ public class TamaGame {
             Tamagoshi.setLifeTime(Integer.parseInt(User.saisieClavier()));
         } catch (IllegalArgumentException e) {
             System.out.println("Erreur dans l'entrée de la durée de vie : " + e.getMessage() + " (un entier était attendu)");
-            System.out.println("Durée de vie par défaut appliqué (10)");
+            System.out.println("Durée de vie par défaut appliquée (10)");
             Tamagoshi.setLifeTime(10);
         }
     }
@@ -157,11 +157,19 @@ public class TamaGame {
             count++;
         }
         System.out.println("Entrez un choix : ");
-        int tamagoshiSelected = Integer.parseInt(User.saisieClavier());
-        if (tamagoshiSelected > this.listeTamagoshisEnCours.size() - 1) {
-            while (tamagoshiSelected > this.listeTamagoshisEnCours.size() - 1) {
-                System.out.println("Choix de tamagoshi invalide !");
+        int tamagoshiSelected = 0;
+        boolean loop = true;
+        while (loop) {
+            try {
                 tamagoshiSelected = Integer.parseInt(User.saisieClavier());
+                if (tamagoshiSelected <= this.listeTamagoshisEnCours.size() - 1) {
+                    loop = false;
+                } else {
+                    System.out.println("Choix de tamagoshi invalide !");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Choix de tamagoshi invalide !");
+                e.getMessage();
             }
         }
         return this.listeTamagoshisEnCours.get(tamagoshiSelected);
