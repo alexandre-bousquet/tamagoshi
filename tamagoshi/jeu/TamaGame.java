@@ -90,7 +90,7 @@ public class TamaGame {
             Tamagoshi.setLifeTime(Integer.parseInt(User.saisieClavier()));
         } catch (IllegalArgumentException e) {
             System.out.println("Erreur dans l'entrée de la durée de vie : " + e.getMessage() + " (un entier était attendu)");
-            System.out.println("Durée de vie par défaut appliquée (10)");
+            System.out.println(messages.getString("defaultTamagoshisLifeTimeApplied"));
             Tamagoshi.setLifeTime(10);
         }
     }
@@ -115,7 +115,7 @@ public class TamaGame {
             if (this.listeTamagoshisEnCours.isEmpty()) {
                 break;
             }
-            System.out.println("------------ Cycle n°" + cycle + " ------------");
+            System.out.println("------------ " + messages.getString("cycle")+ " n°" + cycle + " ------------");
             for (Tamagoshi t : this.listeTamagoshisEnCours) {
                 t.parler();
             }
@@ -128,8 +128,8 @@ public class TamaGame {
             }
             cycle++;
         }
-        System.out.println("------------- Fin de partie ------------");
-        System.out.println("------------ Bilan -------------");
+        System.out.println("------------- " + messages.getString("endOfTheGame") + " ------------");
+        System.out.println("------------ " + messages.getString("result") + " -------------");
         this.resultat();
     }
 
@@ -137,7 +137,7 @@ public class TamaGame {
      * Demande à l'utilisateur de saisir un tamagoshi à nourrir.
      */
     public void nourrir() {
-        System.out.println("Nourrir quel tamagoshi ?");
+        System.out.println(messages.getString("whichTamagoshiToFeed"));
         this.getTamagoshiAction().mange();
     }
 
@@ -145,7 +145,7 @@ public class TamaGame {
      * Demande à l'utilisateur de saisir un tamagoshi avec lequel jouer.
      */
     public void jouer() {
-        System.out.println("Jouer avec quel tamagoshi ?");
+        System.out.println(messages.getString("whichTamagoshiToPlayWith"));
         this.getTamagoshiAction().joue();
     }
 
@@ -159,7 +159,7 @@ public class TamaGame {
             System.out.println("(" + count + ") " + t.getName());
             count++;
         }
-        System.out.println("Entrez un choix : ");
+        System.out.println(messages.getString("makeAChoice"));
         int tamagoshiSelected = 0;
         boolean loop = true;
         while (loop) {
@@ -168,10 +168,10 @@ public class TamaGame {
                 if (tamagoshiSelected <= this.listeTamagoshisEnCours.size() - 1) {
                     loop = false;
                 } else {
-                    System.out.println("Choix de tamagoshi invalide !");
+                    System.out.println(messages.getString("invalidTamagoshiChoice"));
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Choix de tamagoshi invalide !");
+                System.out.println(messages.getString("invalidTamagoshiChoice"));
                 e.getMessage();
             }
         }
@@ -203,8 +203,8 @@ public class TamaGame {
                 System.out.println(t.getName() + " qui était un " + t.getClass().getSimpleName() + " n'est pas arrivé au bout et ne vous félicite pas :(");
             }
         }
-        System.out.println("Niveau de difficulté : " + this.listeTamagoshisDepart.size());
-        System.out.println("Score obtenu : " + this.score() + "%");
+        System.out.println(messages.getString("difficultyLevel") + " : " + this.listeTamagoshisDepart.size());
+        System.out.println(messages.getString("finalScore") + " : " + this.score() + "%");
     }
 
     /**
