@@ -8,7 +8,7 @@ public class User {
 
     public static String saisieClavier() {
     /*
-    il faut gérer les exceptions car l'entrée standard
+    Il faut gérer les exceptions, car l'entrée standard
     peut ne pas être disponible : le constructeur de la 
     classe InputStreamReader peut renvoyer une exception.
     */
@@ -20,11 +20,5 @@ public class User {
             System.exit(0);
             return null;
         }
-    }
-
-    // une méthode main juste pour tester
-    public static void main(String[] args) {
-        String saisie = User.saisieClavier();
-        System.out.println("La saisie est : " + saisie);
     }
 }
