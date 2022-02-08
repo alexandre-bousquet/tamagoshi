@@ -10,12 +10,7 @@ public class GrosJoueur extends Tamagoshi {
 
     @Override
     public boolean consommeFun() {
-        this.setFun(this.getFun() - 2);
-        if (this.getFun() <= 0) {
-            System.out.println(this.getName() + " : Je fais une dépression, ciao !");
-            return false;
-        } else {
-            return true;
-        }
+        this.setFun(this.getFun() - 1);
+        return super.consommeFun();
     }
 }

@@ -43,13 +43,13 @@ public class Tamagoshi {
      * @return boolean
      */
     public boolean parler() {
-        if (this.energy > 4 && this.fun > 4) {
+        if (this.getEnergy() > 4 && this.getFun() > 4) {
             System.out.println(this.getName() + " : Tout va bien pour le moment !");
             return true;
-        } else if (this.energy <= 4 && this.fun > 4) {
+        } else if (this.getEnergy() <= 4 && this.getFun() > 4) {
             System.out.println(this.getName() + " : Je suis affamé nourris moi humain !");
             return false;
-        } else if (this.energy > 4 && this.fun <= 4) {
+        } else if (this.getEnergy() > 4 && this.getFun() <= 4) {
             System.out.println(this.getName() + " : Je meurs d'ennui, distrais moi !");
             return false;
         } else {
@@ -63,10 +63,10 @@ public class Tamagoshi {
      * @return boolean
      */
     public boolean mange() {
-        if (this.energy < this.maxEnergy) {
-            this.setEnergy(this.energy + (new Random().nextInt(3) + 1));
-            if (this.energy > this.maxEnergy) {
-                this.setEnergy(this.maxEnergy);
+        if (this.getEnergy() < this.getMaxEnergy()) {
+            this.setEnergy(this.getEnergy() + (new Random().nextInt(3) + 1));
+            if (this.getEnergy() > this.getMaxEnergy()) {
+                this.setEnergy(this.getMaxEnergy());
             }
             System.out.println(this.getName() + " : Palala j'avais trop la dalle merci !");
             return true;
@@ -100,7 +100,7 @@ public class Tamagoshi {
      */
     public boolean consommeEnergy() {
         this.energy--;
-        if (this.energy <= 0) {
+        if (this.getEnergy() <= 0) {
             System.out.println(this.getName() + " : Arrrrrggh !");
             return false;
         } else {
@@ -114,7 +114,7 @@ public class Tamagoshi {
      */
     public boolean consommeFun() {
         this.fun--;
-        if (this.fun <= 0) {
+        if (this.getFun() <= 0) {
             System.out.println(this.getName() + " : Je fais une dépression, ciao !");
             return false;
         } else {
@@ -130,7 +130,7 @@ public class Tamagoshi {
     public boolean consommeRessources() {
         this.energy--;
         this.fun--;
-        if (this.energy <= 0) {
+        if (this.getEnergy() <= 0) {
             System.out.println(this.getName() + " : Arrrrrggh !");
             return false;
         } else if (this.fun <= 0) {
@@ -198,19 +198,5 @@ public class Tamagoshi {
                 ", maxFun=" + this.maxFun +
                 ", fun=" + this.fun +
                 '}';
-    }
-
-    public static void main(String[] args) {
-        Tamagoshi alex = new Tamagoshi("Alex");
-        System.out.println(alex);
-        alex.parler();
-        alex.consommeRessources();
-        alex.mange();
-        alex.mange();
-        alex.mange();
-        alex.consommeRessources();
-        alex.consommeRessources();
-        alex.consommeRessources();
-        alex.consommeRessources();
     }
 }

@@ -24,32 +24,18 @@ public class Bipolaire extends Tamagoshi {
 
     @Override
     public boolean consommeFun() {
-        if (this.getHumor() >= 2) {
-            this.setFun(this.getFun() - 1);
-        } else {
-            this.setFun(this.getFun() - 3);
+        if (this.getHumor() <= 2) {
+            this.setFun(this.getFun() - 2);
         }
-        if (this.getEnergy() <= 0) {
-            System.out.println(this.getName() + " : Arrrrrggh !");
-            return false;
-        } else {
-            return true;
-        }
+        return super.consommeFun();
     }
 
     @Override
     public boolean consommeEnergy() {
-        if (this.getHumor() >= 2) {
-            this.setEnergy(this.getEnergy() - 1);
-        } else {
-            this.setEnergy(this.getEnergy() - 3);
+        if (this.getHumor() <= 2) {
+            this.setEnergy(this.getEnergy() - 2);
         }
-        if (this.getEnergy() <= 0) {
-            System.out.println(this.getName() + " : Arrrrrggh !");
-            return false;
-        } else {
-            return true;
-        }
+        return super.consommeEnergy();
     }
 
     public int getHumor() {

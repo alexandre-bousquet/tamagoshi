@@ -10,12 +10,7 @@ public class GrosMangeur extends Tamagoshi {
 
     @Override
     public boolean consommeEnergy() {
-        this.setEnergy(this.getEnergy() - 2);
-        if (this.getEnergy() <= 0) {
-            System.out.println(this.getName() + " : Arrrrrggh !");
-            return false;
-        } else {
-            return true;
-        }
+        this.setEnergy(this.getEnergy() - 1);
+        return super.consommeEnergy();
     }
 }
