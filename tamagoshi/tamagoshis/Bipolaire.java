@@ -24,7 +24,7 @@ public class Bipolaire extends Tamagoshi {
 
     @Override
     public boolean consommeFun() {
-        if (this.getHumor() <= 2) {
+        if (this.getHumor() <= 3) {
             this.setFun(this.getFun() - 2);
         }
         return super.consommeFun();
@@ -32,7 +32,7 @@ public class Bipolaire extends Tamagoshi {
 
     @Override
     public boolean consommeEnergy() {
-        if (this.getHumor() <= 2) {
+        if (this.getHumor() <= 3) {
             this.setEnergy(this.getEnergy() - 2);
         }
         return super.consommeEnergy();

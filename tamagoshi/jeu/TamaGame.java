@@ -56,7 +56,7 @@ public class TamaGame {
     /**
      * Initialise la liste des noms possibles pour les tamagoshis.
      */
-    public void initNamesList() {
+    private void initNamesList() {
         Scanner scan = new Scanner(Objects.requireNonNull(TamaGame.class.getResourceAsStream("/tamagoshi/names.txt")));
         while (scan.hasNextLine()) {
             String nom = scan.nextLine();
@@ -67,9 +67,10 @@ public class TamaGame {
     }
 
     /**
+     * Exception générée lorsque la saisie clavier != Integer || <= 0 || > 5 (voir méthode { @link TamaGame#setNbTamagoshis(int) })
      * Initialise les tamagoshis du jeu.
      */
-    public void initTamagoshis() {
+    private void initTamagoshis() {
         System.out.println(messages.getString("askingHowManyTamagoshiToPlayWith"));
         boolean loop = true;
         while (loop) {
@@ -80,7 +81,7 @@ public class TamaGame {
                 logger.severe(messages.getString("tamagoshiNumberExceptionMessage"));
             }
         }
-        for (int i = 0; i < nbTamagoshis; i++) {
+        for (int i = 0; i < this.getNbTamagoshis(); i++) {
             double rand = Math.random();
             int indexName = new Random().nextInt(this.names.size());
             String name = this.names.get(indexName);
@@ -92,8 +93,10 @@ public class TamaGame {
                 t = new GrosMangeur(name);
             } else if (rand <= 0.9) {
                 t = new Cachotier(name);
-            } else {
+            } else if (rand <= 0.95) {
                 t = new Bipolaire(name);
+            } else {
+                t = new Suicidaire(name);
             }
             this.listeTamagoshisDepart.add(t);
             this.listeTamagoshisEnCours.add(t);
@@ -101,16 +104,16 @@ public class TamaGame {
     }
 
     /**
-     * Exception générée lorsque la saisie clavier != Integer || <= 0
+     * Exception générée lorsque la saisie clavier != Integer || <= 0 (voir méthode { @link Tamagoshi#setLifeTime(int) })
      * Initialise la durée de vie des tamagoshis
      */
-    public void initLifeTime() {
+    private void initLifeTime() {
         System.out.println(messages.getString("askingLifeTime"));
         boolean loop = true;
-        while (loop) {
+        while (true) {
             try {
                 Tamagoshi.setLifeTime(Integer.parseInt(User.saisieClavier()));
-                loop = false;
+                break;
             } catch (NegativeLifeTimeException | NumberFormatException e) {
                 logger.severe(messages.getString("lifeTimeExceptionMessage"));
             }
@@ -120,7 +123,7 @@ public class TamaGame {
     /**
      * Initialise le jeu avec les méthodes précédentes.
      */
-    public void initialisation() throws NegativeLifeTimeException, TamagoshiNumberException {
+    private void initialisation() throws NegativeLifeTimeException, TamagoshiNumberException {
         this.initNamesList();
         this.initTamagoshis();
         this.initLifeTime();
@@ -158,7 +161,7 @@ public class TamaGame {
     /**
      * Demande à l'utilisateur de saisir un tamagoshi à nourrir.
      */
-    public void nourrir() {
+    private void nourrir() {
         System.out.println(messages.getString("whichTamagoshiToFeed"));
         this.getTamagoshiAction().mange();
     }
@@ -166,7 +169,7 @@ public class TamaGame {
     /**
      * Demande à l'utilisateur de saisir un tamagoshi avec lequel jouer.
      */
-    public void jouer() {
+    private void jouer() {
         System.out.println(messages.getString("whichTamagoshiToPlayWith"));
         this.getTamagoshiAction().joue();
     }
@@ -175,7 +178,7 @@ public class TamaGame {
      * Fonction qui retourne le tamagoshi dont le numéro est saisis par l'utilisateur au clavier.
      * @return Tamagoshi choisit par l'utilisateur
      */
-    public Tamagoshi getTamagoshiAction() {
+    private Tamagoshi getTamagoshiAction() {
         int count = 0;
         for (Tamagoshi t : this.listeTamagoshisEnCours) {
             System.out.println("(" + count + ") " + t.getName());
@@ -205,7 +208,7 @@ public class TamaGame {
      * Il est égal à ((âge des tamagoshis en vie * 100) / âge total de tous les tamagoshis)
      * @return {int} = score calculé
      */
-    public int score() {
+    private int score() {
         int maxAge = Tamagoshi.getLifeTime() * this.listeTamagoshisDepart.size();
         int currentAge = 0;
         for (Tamagoshi t : this.listeTamagoshisDepart) {
@@ -217,7 +220,7 @@ public class TamaGame {
     /**
      * Affiche le score, la difficulté et l'état de chaque tamagoshi à la fin de la partie.
      */
-    public void resultat() {
+    private void resultat() {
         for (Tamagoshi t : this.listeTamagoshisDepart) {
             StringBuilder str = new StringBuilder()
                     .append(t.getName())
@@ -236,7 +239,11 @@ public class TamaGame {
         System.out.println(messages.getString("finalScore") + " : " + this.score() + "%");
     }
 
-    public void setNbTamagoshis(int nbTamagoshis) throws TamagoshiNumberException {
+    private int getNbTamagoshis() {
+        return nbTamagoshis;
+    }
+
+    private void setNbTamagoshis(int nbTamagoshis) throws TamagoshiNumberException {
         if (nbTamagoshis <= 0 || nbTamagoshis > 5) {
             throw new TamagoshiNumberException(messages.getString("tamagoshiNumberExceptionMessage"));
         }
