@@ -27,9 +27,6 @@ public class TamaGame {
     private static final Locale languageCourant = Locale.getDefault();
     public static ResourceBundle messages = ResourceBundle.getBundle("MessageBundle", languageCourant);
 
-    /**
-     * Classe du jeu
-     */
     public TamaGame() {
         this.listeTamagoshisDepart = new ArrayList<>();
         this.listeTamagoshisEnCours = new ArrayList<>();
@@ -151,7 +148,7 @@ public class TamaGame {
 
     /**
      * Fonction qui retourne le tamagoshi dont le numéro est saisis par l'utilisateur au clavier.
-     * @return Tamagoshi choisit
+     * @return Tamagoshi choisit par l'utilisateur
      */
     public Tamagoshi getTamagoshiAction() {
         int count = 0;
@@ -197,11 +194,18 @@ public class TamaGame {
      */
     public void resultat() {
         for (Tamagoshi t : this.listeTamagoshisDepart) {
+            StringBuilder str = new StringBuilder()
+                    .append(t.getName())
+                    .append(messages.getString("whoWasA"))
+                    .append(" ")
+                    .append(t.getClass().getSimpleName())
+                    .append(" ");
             if (this.listeTamagoshisEnCours.contains(t)) {
-                System.out.println(t.getName() + " qui était un " + t.getClass().getSimpleName() + " a survécu et vous remercie :)");
+                str.append(messages.getString("hasSurvived"));
             } else {
-                System.out.println(t.getName() + " qui était un " + t.getClass().getSimpleName() + " n'est pas arrivé au bout et ne vous félicite pas :(");
+                str.append(messages.getString("hasNotSurvived"));
             }
+            System.out.println(str);
         }
         System.out.println(messages.getString("difficultyLevel") + " : " + this.listeTamagoshisDepart.size());
         System.out.println(messages.getString("finalScore") + " : " + this.score() + "%");
