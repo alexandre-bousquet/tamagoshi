@@ -73,11 +73,10 @@ public class TamaGame {
      */
     private void initTamagoshis() {
         System.out.println(messages.getString("askingHowManyTamagoshiToPlayWith"));
-        boolean loop = true;
-        while (loop) {
+        while (true) {
             try {
                 this.setNbTamagoshis(Integer.parseInt(User.saisieClavier()));
-                loop = false;
+                break;
             } catch (TamagoshiNumberException | NumberFormatException e) {
                 logger.severe(messages.getString("tamagoshiNumberExceptionMessage"));
             }
@@ -110,7 +109,6 @@ public class TamaGame {
      */
     private void initLifeTime() {
         System.out.println(messages.getString("askingLifeTime"));
-        boolean loop = true;
         while (true) {
             try {
                 Tamagoshi.setLifeTime(Integer.parseInt(User.saisieClavier()));
