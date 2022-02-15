@@ -6,6 +6,7 @@ import tamagoshi.tamagoshis.*;
 import tamagoshi.util.User;
 
 import java.util.*;
+import java.util.logging.*;
 
 /**
  * Classe de jeu.
@@ -30,8 +31,24 @@ public class TamaGame {
 
     private static final Locale languageCourant = Locale.getDefault();
     public static ResourceBundle messages = ResourceBundle.getBundle("MessageBundle", languageCourant);
+    public static Logger logger = Logger.getLogger("");
 
     public TamaGame() {
+        logger.setLevel(Level.ALL);
+        StreamHandler handler = new StreamHandler();
+        /*ConsoleHandler handler = new ConsoleHandler();
+        handler.setFormatter(new SimpleFormatter() {
+            private static final String format = "%3$s %n";
+
+            @Override
+            public synchronized String format(LogRecord lr) {
+                return String.format(format,
+                        lr.getMessage()
+                );
+            }
+        });
+        logger.addHandler(handler);*/
+        logger.addHandler(handler);
         this.listeTamagoshisDepart = new ArrayList<>();
         this.listeTamagoshisEnCours = new ArrayList<>();
     }
@@ -95,7 +112,7 @@ public class TamaGame {
                 Tamagoshi.setLifeTime(Integer.parseInt(User.saisieClavier()));
                 loop = false;
             } catch (NegativeLifeTimeException | NumberFormatException e) {
-                System.out.println(messages.getString("lifeTimeExceptionMessage"));
+                logger.severe(messages.getString("lifeTimeExceptionMessage"));
             }
         }
     }
