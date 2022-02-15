@@ -1,5 +1,6 @@
 package tamagoshi.jeu;
 
+import tamagoshi.exceptions.NegativeLifeTimeException;
 import tamagoshi.tamagoshis.*;
 import tamagoshi.util.User;
 
@@ -79,23 +80,26 @@ public class TamaGame {
     }
 
     /**
+     * Exception générée lorsque la saisie clavier != Integer || <= 0
      * Initialise la durée de vie des tamagoshis
      */
     public void initLifeTime() {
         System.out.println(messages.getString("askingLifeTime"));
-        try {
-            Tamagoshi.setLifeTime(Integer.parseInt(User.saisieClavier()));
-        } catch (IllegalArgumentException e) {
-            System.out.println("Erreur dans l'entrée de la durée de vie : " + e.getMessage() + " (un entier était attendu)");
-            System.out.println(messages.getString("defaultTamagoshisLifeTimeApplied"));
-            Tamagoshi.setLifeTime(10);
+        boolean loop = true;
+        while (loop) {
+            try {
+                Tamagoshi.setLifeTime(Integer.parseInt(User.saisieClavier()));
+                loop = false;
+            } catch (NegativeLifeTimeException | NumberFormatException e) {
+                System.out.println(messages.getString("lifeTimeExceptionMessage"));
+            }
         }
     }
 
     /**
      * Initialise le jeu avec les méthodes précédentes.
      */
-    public void initialisation() {
+    public void initialisation() throws NegativeLifeTimeException {
         this.initNamesList();
         this.initTamagoshis();
         this.initLifeTime();
@@ -104,7 +108,7 @@ public class TamaGame {
     /**
      * Lance le jeu.
      */
-    public void play() {
+    public void play() throws NegativeLifeTimeException {
         this.initialisation();
         int cycle = 1;
         while (!this.listeTamagoshisEnCours.isEmpty() && cycle <= Tamagoshi.getLifeTime()) {
@@ -222,7 +226,7 @@ public class TamaGame {
                 "- Liste Tamagoshis vivants : " + this.listeTamagoshisEnCours + "\n";
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws NegativeLifeTimeException {
         TamaGame game = new TamaGame();
         game.play();
     }

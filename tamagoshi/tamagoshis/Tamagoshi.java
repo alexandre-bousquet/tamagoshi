@@ -1,5 +1,6 @@
 package tamagoshi.tamagoshis;
 
+import tamagoshi.exceptions.NegativeLifeTimeException;
 import tamagoshi.jeu.TamaGame;
 
 import java.util.Random;
@@ -184,7 +185,10 @@ public class Tamagoshi {
         return name;
     }
 
-    public static void setLifeTime(int lifeTime) {
+    public static void setLifeTime(int lifeTime) throws NegativeLifeTimeException {
+        if (lifeTime <= 0) {
+            throw new NegativeLifeTimeException(TamaGame.messages.getString("lifeTimeExceptionMessage"));
+        }
         Tamagoshi.lifeTime = lifeTime;
     }
 
