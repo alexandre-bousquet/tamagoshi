@@ -1,5 +1,7 @@
 package tamagoshi.tamagoshis;
 
+import tamagoshi.jeu.TamaGame;
+
 /**
  * Tamagoshi qui n'indique pas comment il va.
  */
@@ -10,7 +12,7 @@ public class Cachotier extends Tamagoshi {
 
     @Override
     public boolean parler() {
-        System.out.println(this.getName() + " : Franchement tu devrais savoir de quoi j'ai besoin ! Réfléchi un minimum !");
+        System.out.println(this.getName() + " : " + TamaGame.messages.getString("secretiveTalk"));
         if (this.getEnergy() > 4 && this.getFun() > 4) {
             return true;
         } else if (this.getEnergy() <= 4 && this.getFun() > 4) {

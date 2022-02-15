@@ -31,6 +31,7 @@ public class TamaGame {
 
     private static final Locale languageCourant = Locale.getDefault();
     public static ResourceBundle messages = ResourceBundle.getBundle("MessageBundle", languageCourant);
+    //public static ResourceBundle messages = ResourceBundle.getBundle("MessageBundle", Locale.US);
     public static Logger logger = Logger.getLogger("");
 
     public TamaGame() {
@@ -123,7 +124,7 @@ public class TamaGame {
     /**
      * Initialise le jeu avec les méthodes précédentes.
      */
-    private void initialisation() throws NegativeLifeTimeException, TamagoshiNumberException {
+    private void initialisation() {
         this.initNamesList();
         this.initTamagoshis();
         this.initLifeTime();
@@ -132,7 +133,7 @@ public class TamaGame {
     /**
      * Lance le jeu.
      */
-    public void play() throws NegativeLifeTimeException, TamagoshiNumberException {
+    public void play() {
         this.initialisation();
         int cycle = 1;
         while (!this.listeTamagoshisEnCours.isEmpty() && cycle <= Tamagoshi.getLifeTime()) {
@@ -261,7 +262,7 @@ public class TamaGame {
                 "- Liste Tamagoshis vivants : " + this.listeTamagoshisEnCours + "\n";
     }
 
-    public static void main(String[] args) throws NegativeLifeTimeException, TamagoshiNumberException {
+    public static void main(String[] args) {
         TamaGame game = new TamaGame();
         game.play();
     }
