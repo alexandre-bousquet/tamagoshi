@@ -1,6 +1,7 @@
 package tamagoshi.jeu;
 
 import tamagoshi.exceptions.NegativeLifeTimeException;
+import tamagoshi.exceptions.TamagoshiNumberException;
 import tamagoshi.tamagoshis.*;
 import tamagoshi.util.User;
 
@@ -10,6 +11,8 @@ import java.util.*;
  * Classe de jeu.
  */
 public class TamaGame {
+    private int nbTamagoshis;
+
     /**
      * Liste des tamagoshis créer au départ du jeu.
      */
@@ -50,14 +53,15 @@ public class TamaGame {
      * Initialise les tamagoshis du jeu.
      */
     public void initTamagoshis() {
-        int nbTamagoshis;
-        try {
-            System.out.println(messages.getString("askingHowManyTamagoshiToPlayWith"));
-            nbTamagoshis = Integer.parseInt(User.saisieClavier());
-        } catch (IllegalArgumentException e) {
-            System.out.println("Erreur dans l'entrée du nombre de tamagoshis : " + e.getMessage() + " (un entier était attendu)");
-            System.out.println(messages.getString("defaultTamagoshisNumberApplied"));
-            nbTamagoshis = 3;
+        System.out.println(messages.getString("askingHowManyTamagoshiToPlayWith"));
+        boolean loop = true;
+        while (loop) {
+            try {
+                this.setNbTamagoshis(Integer.parseInt(User.saisieClavier()));
+                loop = false;
+            } catch (TamagoshiNumberException | NumberFormatException e) {
+                logger.severe(messages.getString("tamagoshiNumberExceptionMessage"));
+            }
         }
         for (int i = 0; i < nbTamagoshis; i++) {
             double rand = Math.random();
@@ -99,7 +103,7 @@ public class TamaGame {
     /**
      * Initialise le jeu avec les méthodes précédentes.
      */
-    public void initialisation() throws NegativeLifeTimeException {
+    public void initialisation() throws NegativeLifeTimeException, TamagoshiNumberException {
         this.initNamesList();
         this.initTamagoshis();
         this.initLifeTime();
@@ -108,7 +112,7 @@ public class TamaGame {
     /**
      * Lance le jeu.
      */
-    public void play() throws NegativeLifeTimeException {
+    public void play() throws NegativeLifeTimeException, TamagoshiNumberException {
         this.initialisation();
         int cycle = 1;
         while (!this.listeTamagoshisEnCours.isEmpty() && cycle <= Tamagoshi.getLifeTime()) {
@@ -215,6 +219,13 @@ public class TamaGame {
         System.out.println(messages.getString("finalScore") + " : " + this.score() + "%");
     }
 
+    public void setNbTamagoshis(int nbTamagoshis) throws TamagoshiNumberException {
+        if (nbTamagoshis <= 0 || nbTamagoshis > 5) {
+            throw new TamagoshiNumberException(messages.getString("tamagoshiNumberExceptionMessage"));
+        }
+        this.nbTamagoshis = nbTamagoshis;
+    }
+
     /**
      *
      * @return {String} Données de la partie
@@ -226,7 +237,7 @@ public class TamaGame {
                 "- Liste Tamagoshis vivants : " + this.listeTamagoshisEnCours + "\n";
     }
 
-    public static void main(String[] args) throws NegativeLifeTimeException {
+    public static void main(String[] args) throws NegativeLifeTimeException, TamagoshiNumberException {
         TamaGame game = new TamaGame();
         game.play();
     }
