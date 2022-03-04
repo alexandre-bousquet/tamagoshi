@@ -7,10 +7,8 @@ import javafx.stage.Stage;
 import java.util.Objects;
 
 public class TamaStage extends Stage {
-    private TamaGameGraphique tamaGameGraphique;
-    private Group group = new Group();
-    private Scene scene;
-    private TamaPane tamaPane;
+    private final TamaGameGraphique tamaGameGraphique;
+    private final TamaPane tamaPane;
     private Button boutonNourrir;
     private Button boutonJouer;
 
@@ -18,10 +16,11 @@ public class TamaStage extends Stage {
         this.tamaGameGraphique = tamaGameGraphique;
         this.tamaPane = tamaPane;
         this.initBoutons();
-        this.group.getChildren().addAll(tamaPane, this.boutonNourrir, this.boutonJouer);
-        this.scene = new Scene(group);
-        this.scene.getStylesheets().add(Objects.requireNonNull(this.getClass().getResource("/tamagoshi/style.css")).toExternalForm());
-        this.setScene(this.scene);
+        Group group = new Group();
+        group.getChildren().addAll(tamaPane, this.boutonNourrir, this.boutonJouer);
+        Scene scene = new Scene(group);
+        scene.getStylesheets().add(Objects.requireNonNull(this.getClass().getResource("/tamagoshi/style.css")).toExternalForm());
+        this.setScene(scene);
         this.setTitle(tamaPane.getTamagoshi().getName());
         this.setResizable(false);
         this.show();
@@ -32,28 +31,24 @@ public class TamaStage extends Stage {
         this.boutonNourrir.getStyleClass().add("customButton");
         this.boutonNourrir.setLayoutX(50);
         this.boutonNourrir.setLayoutY(380);
-        this.boutonNourrir.setOnAction(actionEvent -> {
-            this.nourrir();
-        });
+        this.boutonNourrir.setOnAction(actionEvent -> this.nourrir());
         this.boutonJouer = new Button("Jouer");
         this.boutonJouer.getStyleClass().add("customButton");
         this.boutonJouer.setLayoutX(250);
         this.boutonJouer.setLayoutY(380);
-        this.boutonJouer.setOnAction(actionEvent -> {
-            this.jouer();
-        });
+        this.boutonJouer.setOnAction(actionEvent -> this.jouer());
     }
 
     public void nourrir() {
         this.getTamaPane().manger();
-        for (TamaStage tamaStage : this.tamaGameGraphique.getListeTamagoshisEnCours()) {
+        for (TamaStage tamaStage : this.tamaGameGraphique.getListeTamaStage()) {
             tamaStage.desactiverBoutonNourrir();
         }
     }
 
     public void jouer() {
         this.getTamaPane().jouer();
-        for (TamaStage tamaStage : this.tamaGameGraphique.getListeTamagoshisEnCours()) {
+        for (TamaStage tamaStage : this.tamaGameGraphique.getListeTamaStage()) {
             tamaStage.desactiverBoutonJouer();
         }
     }

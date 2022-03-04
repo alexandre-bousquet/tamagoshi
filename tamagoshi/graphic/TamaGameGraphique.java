@@ -1,7 +1,6 @@
 package tamagoshi.graphic;
 
 import javafx.application.Application;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -14,7 +13,7 @@ import tamagoshi.tamagoshis.*;
 
 import java.util.*;
 
-public class TamaGameGraphique extends Application implements EventHandler {
+public class TamaGameGraphique extends Application {
     private TamaGame tamaGame;
     private int difficulty = 2;
     private int lifeTime;
@@ -23,12 +22,17 @@ public class TamaGameGraphique extends Application implements EventHandler {
     /**
      * Liste des tamagoshis créer au départ du jeu.
      */
-    private List<TamaStage> listeTamagoshisDepart;
+    private List<Tamagoshi> listeTamagoshisDepart;
 
     /**
      * Liste des tamagoshis vivants à l'instant T.
      */
-    private List<TamaStage> listeTamagoshisEnCours;
+    private List<Tamagoshi> listeTamagoshisEnCours;
+
+    /**
+     * Liste des fenêtres de tamagoshis.
+     */
+    private List<TamaStage> listeTamaStage;
 
     /**
      * Liste des noms possibles pour les tamagoshis.
@@ -40,6 +44,7 @@ public class TamaGameGraphique extends Application implements EventHandler {
         this.tamaGame = new TamaGame();
         this.listeTamagoshisDepart = new ArrayList<>();
         this.listeTamagoshisEnCours = new ArrayList<>();
+        this.listeTamaStage = new ArrayList<>();
         this.console = new TextArea("- Logs -");
         this.console.setEditable(false);
 
@@ -114,9 +119,7 @@ public class TamaGameGraphique extends Application implements EventHandler {
 
         Menu helpMenu = new Menu("Aide");
         MenuItem aboutItem = new MenuItem("Informations");
-        aboutItem.setOnAction(actionEvent -> {
-            this.displayInformations();
-        });
+        aboutItem.setOnAction(actionEvent -> this.displayInformations());
         MenuItem helpItem = new MenuItem("Aide");
         helpMenu.getItems().addAll(aboutItem, helpItem);
 
@@ -143,20 +146,22 @@ public class TamaGameGraphique extends Application implements EventHandler {
      * Initialise la liste des noms possibles pour les tamagoshis.
      */
     private void initNamesList() {
-        Scanner scan = new Scanner(Objects.requireNonNull(TamaGame.class.getResourceAsStream("/tamagoshi/names.txt")));
+        Scanner scan = new Scanner(Objects.requireNonNull(this.getClass().getResourceAsStream("/tamagoshi/names.txt")));
         while (scan.hasNextLine()) {
             String nom = scan.nextLine();
-            names.add(nom);
+            this.names.add(nom);
         }
         scan.close();
-        Collections.shuffle(names);
+        Collections.shuffle(this.names);
     }
 
     public void initTamagoshis() {
         for (int i = 0; i < this.getDifficulty(); i++) {
-            TamaStage tamaStage = new TamaStage(new TamaPane(this.generateRandomTamagoshi()), this);
-            this.listeTamagoshisDepart.add(tamaStage);
-            this.listeTamagoshisEnCours.add(tamaStage);
+            Tamagoshi tamagoshi = this.generateRandomTamagoshi();
+            TamaStage tamaStage = new TamaStage(new TamaPane(tamagoshi), this);
+            this.getListeTamagoshisDepart().add(tamagoshi);
+            this.getListeTamagoshisEnCours().add(tamagoshi);
+            this.getListeTamaStage().add(tamaStage);
         }
     }
 
@@ -185,22 +190,36 @@ public class TamaGameGraphique extends Application implements EventHandler {
     }
 
     private void activerBoutons() {
-        for (TamaStage tamaStage : listeTamagoshisEnCours) {
+        for (TamaStage tamaStage : this.listeTamaStage) {
             tamaStage.activerBoutonNourrir();
             tamaStage.activerBoutonJouer();
         }
-    }
-
-    private TextArea getConsole() {
-        return console;
     }
 
     private void log(String message) {
         this.getConsole().appendText("\n" + message);
     }
 
-    public List<TamaStage> getListeTamagoshisEnCours() {
+    public static void main(String[] args) {
+        Application.launch(args);
+    }
+
+    // Getters et setters
+
+    private TextArea getConsole() {
+        return console;
+    }
+
+    private List<Tamagoshi> getListeTamagoshisEnCours() {
         return listeTamagoshisEnCours;
+    }
+
+    private List<Tamagoshi> getListeTamagoshisDepart() {
+        return listeTamagoshisDepart;
+    }
+
+    public List<TamaStage> getListeTamaStage() {
+        return listeTamaStage;
     }
 
     private int getDifficulty() {
@@ -209,14 +228,5 @@ public class TamaGameGraphique extends Application implements EventHandler {
 
     private TamaGame getTamaGame() {
         return tamaGame;
-    }
-
-    public static void main(String[] args) {
-        Application.launch(args);
-    }
-
-    @Override
-    public void handle(Event event) {
-        System.out.println(event.getSource());
     }
 }
