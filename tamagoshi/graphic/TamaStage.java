@@ -4,19 +4,18 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class TamaStage extends Stage {
+    private TamaGameGraphique tamaGameGraphique;
     private Group group = new Group();
     private Scene scene;
     private TamaPane tamaPane;
     private Button boutonNourrir;
     private Button boutonJouer;
 
-    public TamaStage(TamaPane tamaPane) {
+    public TamaStage(TamaPane tamaPane, TamaGameGraphique tamaGameGraphique) {
+        this.tamaGameGraphique = tamaGameGraphique;
         this.tamaPane = tamaPane;
         this.initBoutons();
         this.group.getChildren().addAll(tamaPane, this.boutonNourrir, this.boutonJouer);
@@ -33,10 +32,46 @@ public class TamaStage extends Stage {
         this.boutonNourrir.getStyleClass().add("customButton");
         this.boutonNourrir.setLayoutX(50);
         this.boutonNourrir.setLayoutY(380);
+        this.boutonNourrir.setOnAction(actionEvent -> {
+            this.nourrir();
+        });
         this.boutonJouer = new Button("Jouer");
         this.boutonJouer.getStyleClass().add("customButton");
         this.boutonJouer.setLayoutX(250);
         this.boutonJouer.setLayoutY(380);
+        this.boutonJouer.setOnAction(actionEvent -> {
+            this.jouer();
+        });
+    }
+
+    public void nourrir() {
+        this.getTamaPane().manger();
+        for (TamaStage tamaStage : this.tamaGameGraphique.getListeTamagoshisEnCours()) {
+            tamaStage.desactiverBoutonNourrir();
+        }
+    }
+
+    public void jouer() {
+        this.getTamaPane().jouer();
+        for (TamaStage tamaStage : this.tamaGameGraphique.getListeTamagoshisEnCours()) {
+            tamaStage.desactiverBoutonJouer();
+        }
+    }
+
+    public void desactiverBoutonNourrir() {
+        this.getBoutonNourrir().setDisable(true);
+    }
+
+    public void activerBoutonNourrir() {
+        this.getBoutonNourrir().setDisable(false);
+    }
+
+    public void desactiverBoutonJouer() {
+        this.getBoutonJouer().setDisable(true);
+    }
+
+    public void activerBoutonJouer() {
+        this.getBoutonJouer().setDisable(false);
     }
 
     public TamaPane getTamaPane() {
@@ -49,21 +84,5 @@ public class TamaStage extends Stage {
 
     public Button getBoutonJouer() {
         return this.boutonJouer;
-    }
-
-    public void desactiverBoutonNourrir() {
-        this.getBoutonNourrir().setDisable(true);
-    }
-
-    public void activerBoutonNourrir() {
-        this.getBoutonNourrir().setDisable(false);
-    }
-
-    public void desactiverBoutonJouer() {
-        this.getBoutonNourrir().setDisable(true);
-    }
-
-    public void activerBoutonJouer() {
-        this.getBoutonNourrir().setDisable(false);
     }
 }

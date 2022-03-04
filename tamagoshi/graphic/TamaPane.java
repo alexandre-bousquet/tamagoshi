@@ -1,7 +1,5 @@
 package tamagoshi.graphic;
 
-import javafx.scene.control.Button;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -21,7 +19,6 @@ public class TamaPane extends BorderPane {
         this.tamagoshi = tamagoshi;
         this.labelNom = new Label(tamagoshi.getName());
         this.labelNom.getStyleClass().add("label");
-        //this.labelNom.setContentDisplay(ContentDisplay.CENTER);
         this.updatePhase();
         this.setTop(this.labelNom);
         this.setBottom(new Text(message));
@@ -45,16 +42,27 @@ public class TamaPane extends BorderPane {
     }
 
     public void jouer() {
-        this.getTamagoshi().mange();
+        this.getTamagoshi().joue();
         this.updatePhase();
     }
 
     public void updatePhase() {
         this.getPhase();
-        this.imageView.setFitWidth(400);
-        this.imageView.setFitHeight(400);
-        this.setCenter(this.imageView);
+        this.updatePicture();
+        this.updateMessage();
     }
+
+    public void updatePicture() {
+        this.getImageView().setFitWidth(400);
+        this.getImageView().setFitHeight(400);
+        this.setCenter(this.getImageView());
+    }
+
+    public void updateMessage() {
+        this.setBottom(new Text(this.getMessage()));
+    }
+
+    // Getters et setters
 
     public Tamagoshi getTamagoshi() {
         return tamagoshi;

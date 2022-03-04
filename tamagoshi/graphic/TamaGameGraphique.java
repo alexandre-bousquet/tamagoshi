@@ -6,6 +6,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import tamagoshi.jeu.TamaGame;
@@ -15,7 +16,8 @@ import java.util.*;
 
 public class TamaGameGraphique extends Application implements EventHandler {
     private TamaGame tamaGame;
-    private int difficulty;
+    private int difficulty = 2;
+    private int lifeTime;
     private TextArea console;
 
     /**
@@ -36,30 +38,72 @@ public class TamaGameGraphique extends Application implements EventHandler {
     @Override
     public void start(Stage stage) throws Exception {
         this.tamaGame = new TamaGame();
-        this.initNamesList();
         this.listeTamagoshisDepart = new ArrayList<>();
         this.listeTamagoshisEnCours = new ArrayList<>();
         this.console = new TextArea("- Logs -");
         this.console.setEditable(false);
-        this.console.appendText("\ntest");
 
         BorderPane root = new BorderPane();
         root.setTop(this.generateMenuBar());
         root.setCenter(this.console);
-        Scene scene = new Scene(root, 400, 400);
+        Scene scene = new Scene(root, 500, 500);
         stage.setTitle("TamaGame");
         stage.setResizable(false);
         stage.setScene(scene);
         stage.show();
 
-        for (int i = 0; i < 2; i++) {
-            TamaStage tamaStage = new TamaStage(new TamaPane(this.generateRandomTamagoshi()));
-            this.listeTamagoshisDepart.add(tamaStage);
-            this.listeTamagoshisEnCours.add(tamaStage);
-        }
+        EventHandler<MouseEvent> eventHandler = e -> {
+            System.out.println("TEST");
+        };
+        stage.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
+
+        this.play();
     }
 
-    public MenuBar generateMenuBar() {
+    /**
+     * Initialise le jeu avec les méthodes précédentes.
+     */
+    private void initialisation() {
+        this.initNamesList();
+        this.initTamagoshis();
+        this.initLifeTime();
+    }
+
+    /**
+     * Lance le jeu.
+     */
+    public void play() {
+        this.initialisation();
+        int cycle = 1;
+        /*while (!this.listeTamagoshisEnCours.isEmpty() && cycle <= Tamagoshi.getLifeTime()) {
+            //Tamagoshi tamagoshi =
+            this.listeTamagoshisEnCours.removeIf(t -> t.getTamaPane().getTamagoshi().getEnergy() <= 0 || t.getFun() <= 0 || t.getAge() >= Tamagoshi.getLifeTime());
+            if (this.listeTamagoshisEnCours.isEmpty()) {
+                break;
+            }
+            this.log("------------ " + TamaGame.messages.getString("cycle")+ " n°" + cycle + " ------------");
+            for (TamaStage t : this.listeTamagoshisEnCours) {
+                t.parler();
+            }
+            this.nourrir();
+            this.jouer();
+            for (Tamagoshi t : this.listeTamagoshisEnCours) {
+                t.consommeEnergy();
+                t.consommeFun();
+                t.vieillir();
+            }
+            cycle++;
+        }*/
+        this.log("------------- " + TamaGame.messages.getString("endOfTheGame") + " ------------");
+        this.log("------------ " + TamaGame.messages.getString("result") + " -------------");
+        //this.resultat();
+    }
+
+    public void nextCycle() {
+
+    }
+
+    private MenuBar generateMenuBar() {
         Menu gameMenu = new Menu("Jeu");
         MenuItem newGameItem = new MenuItem("Nouvelle partie");
         gameMenu.getItems().addAll(newGameItem);
@@ -108,6 +152,14 @@ public class TamaGameGraphique extends Application implements EventHandler {
         Collections.shuffle(names);
     }
 
+    public void initTamagoshis() {
+        for (int i = 0; i < this.getDifficulty(); i++) {
+            TamaStage tamaStage = new TamaStage(new TamaPane(this.generateRandomTamagoshi()), this);
+            this.listeTamagoshisDepart.add(tamaStage);
+            this.listeTamagoshisEnCours.add(tamaStage);
+        }
+    }
+
     private Tamagoshi generateRandomTamagoshi() {
         double rand = Math.random();
         int indexName = new Random().nextInt(this.names.size());
@@ -128,6 +180,10 @@ public class TamaGameGraphique extends Application implements EventHandler {
         return t;
     }
 
+    private void initLifeTime() {
+        this.lifeTime = 10;
+    }
+
     private void activerBoutons() {
         for (TamaStage tamaStage : listeTamagoshisEnCours) {
             tamaStage.activerBoutonNourrir();
@@ -135,7 +191,23 @@ public class TamaGameGraphique extends Application implements EventHandler {
         }
     }
 
-    public TamaGame getTamaGame() {
+    private TextArea getConsole() {
+        return console;
+    }
+
+    private void log(String message) {
+        this.getConsole().appendText("\n" + message);
+    }
+
+    public List<TamaStage> getListeTamagoshisEnCours() {
+        return listeTamagoshisEnCours;
+    }
+
+    private int getDifficulty() {
+        return difficulty;
+    }
+
+    private TamaGame getTamaGame() {
         return tamaGame;
     }
 
