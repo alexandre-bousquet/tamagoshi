@@ -1,0 +1,15 @@
+.label {
+    -fx-font-weight: bold;
+    -fx-text-alignment: center;
+    -fx-font-size: 20;
+    -fx-label-padding: 10;
+}
+
+.customButton {
+    -fx-font-weight: bold;
+    -fx-font-size: 20;
+    -fx-min-width: 100;
+    -fx-background-radius: 10;
+    -fx-background-insets: 0, 1,1 ;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 3, 0.0 , 0 , 1 );
+}
