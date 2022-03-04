@@ -8,7 +8,7 @@ import java.util.Random;
 /**
  * Tamagoshi lambda.
  */
-public class Tamagoshi {
+public abstract class Tamagoshi {
     /**
      * Ege du tamagoshi.
      */

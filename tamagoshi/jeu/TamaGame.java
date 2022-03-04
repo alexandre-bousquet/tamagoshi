@@ -17,17 +17,17 @@ public class TamaGame {
     /**
      * Liste des tamagoshis créer au départ du jeu.
      */
-    private ArrayList<Tamagoshi> listeTamagoshisDepart;
+    private List<Tamagoshi> listeTamagoshisDepart;
 
     /**
      * Liste des tamagoshis vivants à l'instant T.
      */
-    private ArrayList<Tamagoshi> listeTamagoshisEnCours;
+    private List<Tamagoshi> listeTamagoshisEnCours;
 
     /**
      * Liste des noms possibles pour les tamagoshis.
      */
-    private ArrayList<String> names = new ArrayList<>();
+    private List<String> names = new ArrayList<>();
 
     private static final Locale languageCourant = Locale.getDefault();
     public static ResourceBundle messages = ResourceBundle.getBundle("MessageBundle", languageCourant);
@@ -82,29 +82,34 @@ public class TamaGame {
             }
         }
         for (int i = 0; i < this.getNbTamagoshis(); i++) {
-            double rand = Math.random();
-            int indexName = new Random().nextInt(this.names.size());
-            String name = this.names.get(indexName);
-            this.names.remove(indexName);
-            Tamagoshi t;
-            if (rand <= 0.40) {
-                t = new GrosJoueur(name);
-            } else if (rand <= 0.8) {
-                t = new GrosMangeur(name);
-            } else if (rand <= 0.9) {
-                t = new Cachotier(name);
-            } else if (rand <= 0.95) {
-                t = new Bipolaire(name);
-            } else {
-                t = new Suicidaire(name);
-            }
+            Tamagoshi t = generateRandomTamagoshi();
             this.listeTamagoshisDepart.add(t);
             this.listeTamagoshisEnCours.add(t);
         }
     }
 
+    private Tamagoshi generateRandomTamagoshi() {
+        double rand = Math.random();
+        int indexName = new Random().nextInt(this.names.size());
+        String name = this.names.get(indexName);
+        this.names.remove(indexName);
+        Tamagoshi t;
+        if (rand <= 0.40) {
+            t = new GrosJoueur(name);
+        } else if (rand <= 0.8) {
+            t = new GrosMangeur(name);
+        } else if (rand <= 0.9) {
+            t = new Cachotier(name);
+        } else if (rand <= 0.95) {
+            t = new Bipolaire(name);
+        } else {
+            t = new Suicidaire(name);
+        }
+        return t;
+    }
+
     /**
-     * Exception générée lorsque la saisie clavier != Integer || <= 0 (voir méthode { @link Tamagoshi#setLifeTime(int) })
+     * Exception générée lorsque la saisie clavier != Integer || <= 0 (voir méthode {@link Tamagoshi#setLifeTime(int)})
      * Initialise la durée de vie des tamagoshis
      */
     private void initLifeTime() {
