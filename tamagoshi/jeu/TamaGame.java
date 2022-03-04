@@ -250,7 +250,7 @@ public class TamaGame {
     }
 
     /**
-     *
+     * Affiche la liste des tamagoshis.
      * @return {String} Données de la partie
      */
     @Override
