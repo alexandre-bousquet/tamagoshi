@@ -24,7 +24,7 @@ public class TamaPane extends BorderPane {
         this.setBottom(new Text(message));
     }
 
-    public void getPhase() {
+    private void getPhase() {
         if (this.getTamagoshi().getEnergy() > 4 && this.getTamagoshi().getFun() > 4) {
             this.imageView = new ImageView(new Image(Objects.requireNonNull(this.getClass().getResourceAsStream("/tamagoshi/images/phase_1.jpg"))));
         } else if (this.getTamagoshi().getEnergy() <= 4 && this.getTamagoshi().getFun() <= 4) {
@@ -38,45 +38,45 @@ public class TamaPane extends BorderPane {
         }
     }
 
-    public void manger() {
+    protected void manger() {
         this.updateMessage(this.getTamagoshi().mange());
     }
 
-    public void jouer() {
+    protected void jouer() {
         this.updateMessage(this.getTamagoshi().joue());
     }
 
-    public void updatePhase() {
+    protected void updatePhase() {
         this.getPhase();
         this.updatePicture();
         this.updateMessage(this.getTamagoshi().parler());
     }
 
-    public void updatePicture() {
+    private void updatePicture() {
         this.getImageView().setFitWidth(400);
         this.getImageView().setFitHeight(400);
         this.setCenter(this.getImageView());
     }
 
-    public void updateMessage(String message) {
+    private void updateMessage(String message) {
         this.setBottom(new Text(message));
     }
 
     // Getters et setters
 
-    public Tamagoshi getTamagoshi() {
+    protected Tamagoshi getTamagoshi() {
         return tamagoshi;
     }
 
-    public ImageView getImageView() {
+    private ImageView getImageView() {
         return imageView;
     }
 
-    public String getMessage() {
+    private String getMessage() {
         return message;
     }
 
-    public void setMessage(String message) {
+    private void setMessage(String message) {
         this.message = message;
     }
 }

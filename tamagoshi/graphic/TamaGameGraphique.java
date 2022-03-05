@@ -68,11 +68,6 @@ public class TamaGameGraphique extends Application {
         this.play();
     }
 
-    @Override
-    public void stop(){
-
-    }
-
     /**
      * Initialise le jeu avec les méthodes précédentes.
      */
@@ -90,7 +85,7 @@ public class TamaGameGraphique extends Application {
         this.nextCycle();
     }
 
-    public void prepareNextCycle() {
+    protected void prepareNextCycle() {
         if (!this.isPeutNourrir() && !this.isPeutJouer()) {
             this.getListeTamagoshisEnCours().removeIf(t -> !t.consommeEnergy() || !t.consommeFun() || !t.vieillir());
             this.getListeTamaStage().removeIf(t -> !this.getListeTamagoshisEnCours().contains(t.getTamaPane().getTamagoshi()));
@@ -98,7 +93,7 @@ public class TamaGameGraphique extends Application {
         }
     }
 
-    public void nextCycle() {
+    private void nextCycle() {
         if (this.getCycle() < Tamagoshi.getLifeTime() && !this.getListeTamagoshisEnCours().isEmpty()) {
             this.activerBoutons();
             this.incrementCycle();
@@ -197,7 +192,7 @@ public class TamaGameGraphique extends Application {
         Collections.shuffle(this.names);
     }
 
-    public void initTamagoshis() {
+    private void initTamagoshis() {
         for (int i = 0; i < this.getDifficulty(); i++) {
             Tamagoshi tamagoshi = this.generateRandomTamagoshi();
             TamaStage tamaStage = new TamaStage(new TamaPane(tamagoshi), this);
@@ -274,27 +269,27 @@ public class TamaGameGraphique extends Application {
         return tamaGame;
     }
 
-    public boolean isPeutNourrir() {
+    private boolean isPeutNourrir() {
         return peutNourrir;
     }
 
-    public void setPeutNourrir(boolean peutNourrir) {
+    protected void setPeutNourrir(boolean peutNourrir) {
         this.peutNourrir = peutNourrir;
     }
 
-    public boolean isPeutJouer() {
+    private boolean isPeutJouer() {
         return peutJouer;
     }
 
-    public void setPeutJouer(boolean peutJouer) {
+    protected void setPeutJouer(boolean peutJouer) {
         this.peutJouer = peutJouer;
     }
 
-    public int getCycle() {
+    private int getCycle() {
         return cycle;
     }
 
-    public void incrementCycle() {
+    private void incrementCycle() {
        this.cycle++;
     }
 }

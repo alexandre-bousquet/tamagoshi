@@ -28,7 +28,7 @@ public class TamaStage extends Stage {
         this.show();
     }
 
-    public void initBoutons() {
+    private void initBoutons() {
         this.boutonNourrir = new Button("Nourrir");
         this.boutonNourrir.getStyleClass().add("customButton");
         this.boutonNourrir.setLayoutX(50);
@@ -41,7 +41,7 @@ public class TamaStage extends Stage {
         this.boutonJouer.setOnAction(actionEvent -> this.jouer());
     }
 
-    public void nourrir() {
+    private void nourrir() {
         this.getTamaPane().manger();
         for (TamaStage tamaStage : this.getTamaGameGraphique().getListeTamaStage()) {
             tamaStage.desactiverBoutonNourrir();
@@ -51,7 +51,7 @@ public class TamaStage extends Stage {
         this.getTamaGameGraphique().prepareNextCycle();
     }
 
-    public void jouer() {
+    private void jouer() {
         this.getTamaPane().jouer();
         for (TamaStage tamaStage : this.getTamaGameGraphique().getListeTamaStage()) {
             tamaStage.desactiverBoutonJouer();
@@ -61,11 +61,11 @@ public class TamaStage extends Stage {
         this.getTamaGameGraphique().prepareNextCycle();
     }
 
-    public void desactiverBoutonNourrir() {
+    private void desactiverBoutonNourrir() {
         this.getBoutonNourrir().setDisable(true);
     }
 
-    public void activerBoutonNourrir() {
+    protected void activerBoutonNourrir() {
         this.getBoutonNourrir().setDisable(false);
     }
 
@@ -73,25 +73,25 @@ public class TamaStage extends Stage {
         this.getBoutonJouer().setDisable(true);
     }
 
-    public void activerBoutonJouer() {
+    protected void activerBoutonJouer() {
         this.getBoutonJouer().setDisable(false);
     }
 
     // Getters et setters
 
-    public TamaPane getTamaPane() {
+    protected TamaPane getTamaPane() {
         return this.tamaPane;
     }
 
-    public Button getBoutonNourrir() {
+    private Button getBoutonNourrir() {
         return this.boutonNourrir;
     }
 
-    public Button getBoutonJouer() {
+    private Button getBoutonJouer() {
         return this.boutonJouer;
     }
 
-    public TamaGameGraphique getTamaGameGraphique() {
+    private TamaGameGraphique getTamaGameGraphique() {
         return tamaGameGraphique;
     }
 }
