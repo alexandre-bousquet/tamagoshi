@@ -147,8 +147,9 @@ public abstract class Tamagoshi {
     /**
      * Augmente l'âge du tamagoshi.
      */
-    public void vieillir() {
+    public boolean vieillir() {
         this.age++;
+        return this.getAge() < getLifeTime();
     }
 
     // Getters & Setters

@@ -25,7 +25,6 @@ public class TamaPane extends BorderPane {
     }
 
     public void getPhase() {
-        //System.out.println(this.getTamagoshi());
         if (this.getTamagoshi().getEnergy() > 4 && this.getTamagoshi().getFun() > 4) {
             this.imageView = new ImageView(new Image(Objects.requireNonNull(this.getClass().getResourceAsStream("/tamagoshi/images/phase_1.jpg"))));
         } else if (this.getTamagoshi().getEnergy() <= 4 && this.getTamagoshi().getFun() <= 4) {

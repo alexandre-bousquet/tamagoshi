@@ -14,6 +14,8 @@ import tamagoshi.tamagoshis.*;
 
 import java.util.*;
 
+import static tamagoshi.jeu.TamaGame.messages;
+
 public class TamaGameGraphique extends Application {
     private TamaGame tamaGame;
     private int difficulty = 2;
@@ -83,35 +85,70 @@ public class TamaGameGraphique extends Application {
     public void play() throws NegativeLifeTimeException {
         this.initialisation();
         this.nextCycle();
-        /*this.log("------------- " + TamaGame.messages.getString("endOfTheGame") + " ------------");
-        this.log("------------ " + TamaGame.messages.getString("result") + " -------------");*/
     }
 
     public void prepareNextCycle() {
         if (!this.isPeutNourrir() && !this.isPeutJouer()) {
-            this.getListeTamagoshisEnCours().removeIf(t -> t.getEnergy() <= 0 || t.getFun() <= 0 || t.getAge() >= Tamagoshi.getLifeTime());
-            for (Tamagoshi tamagoshi : this.getListeTamagoshisEnCours()) {
-                for (int i = 0; i < this.getListeTamaStage().size(); i++) {
-                    System.out.println(this.getListeTamaStage().get(i).getTamaPane().getTamagoshi().equals(tamagoshi));
-                }
-                tamagoshi.consommeEnergy();
-                tamagoshi.consommeFun();
-                tamagoshi.vieillir();
-            }
+            this.getListeTamagoshisEnCours().removeIf(t -> !t.consommeEnergy() || !t.consommeFun() || !t.vieillir());
+            //this.getListeTamaStage().removeIf(t -> t.getEnergy() <= 0 || t.getFun() <= 0 || t.getAge() >= Tamagoshi.getLifeTime());
             this.nextCycle();
         }
     }
 
     public void nextCycle() {
-        this.activerBoutons();
-        this.incrementCycle();
-        this.log("------------ " + TamaGame.messages.getString("cycle")+ " n°" + this.getCycle() + " ------------");
-        for (Tamagoshi tamagoshi : this.getListeTamagoshisEnCours()) {
-            tamagoshi.parler();
+        if (this.getCycle() < Tamagoshi.getLifeTime() && !this.getListeTamagoshisEnCours().isEmpty()) {
+            this.activerBoutons();
+            this.incrementCycle();
+            this.log("------------ " + messages.getString("cycle")+ " n°" + this.getCycle() + " ------------");
+            for (Tamagoshi tamagoshi : this.getListeTamagoshisEnCours()) {
+                tamagoshi.parler();
+                System.out.println(tamagoshi);
+            }
+            for (TamaStage tamaStage : this.getListeTamaStage()) {
+                tamaStage.getTamaPane().updatePhase();
+            }
+        } else {
+            this.resultat();
         }
-        if (this.getCycle() >= Tamagoshi.getLifeTime() || this.getListeTamagoshisEnCours().isEmpty()) {
-            // TODO
+    }
+
+    /**
+     * Calcule le score et le retourne.
+     * Il est égal à ((âge des tamagoshis en vie * 100) / âge total de tous les tamagoshis)
+     * @return {int} = score calculé
+     */
+    private int score() {
+        int maxAge = Tamagoshi.getLifeTime() * this.getListeTamagoshisDepart().size();
+        int currentAge = 0;
+        for (Tamagoshi t : this.getListeTamagoshisDepart()) {
+            currentAge += t.getAge();
         }
+        return currentAge * 100 / maxAge;
+    }
+
+    /**
+     * Affiche le score, la difficulté et l'état de chaque tamagoshi à la fin de la partie.
+     */
+    private void resultat() {
+        this.log("------------- " + messages.getString("endOfTheGame") + " ------------");
+        this.log("------------ " + messages.getString("result") + " -------------");
+        for (Tamagoshi t : this.getListeTamagoshisDepart()) {
+            StringBuilder str = new StringBuilder()
+                    .append(t.getName())
+                    .append(" ")
+                    .append(messages.getString("whoWasA"))
+                    .append(" ")
+                    .append(t.getClass().getSimpleName())
+                    .append(" ");
+            if (t.getAge() >= Tamagoshi.getLifeTime()) {
+                str.append(messages.getString("hasSurvived"));
+            } else {
+                str.append(messages.getString("hasNotSurvived"));
+            }
+            this.log(String.valueOf(str));
+        }
+        this.log(messages.getString("difficultyLevel") + " : " + this.getListeTamagoshisDepart().size());
+        this.log(messages.getString("finalScore") + " : " + this.score() + "%");
     }
 
     private MenuBar generateMenuBar() {
