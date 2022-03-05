@@ -10,16 +10,19 @@ import javafx.stage.Stage;
 import tamagoshi.exceptions.NegativeLifeTimeException;
 import tamagoshi.tamagoshis.*;
 
+import java.io.*;
 import java.util.*;
 
 import static tamagoshi.jeu.TamaGame.messages;
 
 public class TamaGameGraphique extends Application {
-    private int difficulty = 2;
+    private int difficulty = 0;
     private TextArea console;
     private boolean peutNourrir = true;
     private boolean peutJouer = true;
     private int cycle = 0;
+    private final String propertiesFileLocation = System.getenv("LOCALAPPDATA") + "\\tamagoshiProperties.properties";
+    Properties props = new Properties();
 
     /**
      * Liste des tamagoshis créer au départ du jeu.
@@ -43,6 +46,8 @@ public class TamaGameGraphique extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        this.getProperties();
+
         this.listeTamagoshisDepart = new ArrayList<>();
         this.listeTamagoshisEnCours = new ArrayList<>();
         this.listeTamaStage = new ArrayList<>();
@@ -60,6 +65,20 @@ public class TamaGameGraphique extends Application {
         stage.show();
 
         this.play();
+    }
+
+    private void getProperties() {
+        try (InputStream in = new FileInputStream(this.propertiesFileLocation)) {
+            this.props.load(in);
+        } catch (IOException e1) {
+            props.setProperty("difficulty", "3");
+            props.setProperty("lifeTime", "10");
+            try (OutputStream out = new FileOutputStream(this.propertiesFileLocation)) {
+                props.store(out, "Config");
+            } catch (IOException e2) {
+                e2.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -190,7 +209,7 @@ public class TamaGameGraphique extends Application {
     }
 
     private void initTamagoshis() {
-        for (int i = 0; i < this.getDifficulty(); i++) {
+        for (int i = 0; i < Integer.parseInt(this.props.getProperty("difficulty")); i++) {
             Tamagoshi tamagoshi = this.generateRandomTamagoshi();
             TamaStage tamaStage = new TamaStage(new TamaPane(tamagoshi), this);
             this.getListeTamagoshisDepart().add(tamagoshi);
