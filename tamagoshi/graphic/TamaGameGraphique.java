@@ -1,6 +1,7 @@
 package tamagoshi.graphic;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -8,6 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import tamagoshi.exceptions.NegativeLifeTimeException;
 import tamagoshi.jeu.TamaGame;
 import tamagoshi.tamagoshis.*;
@@ -57,17 +59,18 @@ public class TamaGameGraphique extends Application {
         root.setTop(this.generateMenuBar());
         root.setCenter(this.console);
         Scene scene = new Scene(root, 500, 500);
+        stage.setOnCloseRequest(ev -> Platform.exit());
         stage.setTitle("TamaGame");
         stage.setResizable(false);
         stage.setScene(scene);
         stage.show();
 
-        EventHandler<MouseEvent> eventHandler = e -> {
-            System.out.println("TEST");
-        };
-        stage.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
-
         this.play();
+    }
+
+    @Override
+    public void stop(){
+
     }
 
     /**
@@ -90,7 +93,7 @@ public class TamaGameGraphique extends Application {
     public void prepareNextCycle() {
         if (!this.isPeutNourrir() && !this.isPeutJouer()) {
             this.getListeTamagoshisEnCours().removeIf(t -> !t.consommeEnergy() || !t.consommeFun() || !t.vieillir());
-            //this.getListeTamaStage().removeIf(t -> t.getEnergy() <= 0 || t.getFun() <= 0 || t.getAge() >= Tamagoshi.getLifeTime());
+            this.getListeTamaStage().removeIf(t -> !this.getListeTamagoshisEnCours().contains(t.getTamaPane().getTamagoshi()));
             this.nextCycle();
         }
     }
@@ -100,10 +103,6 @@ public class TamaGameGraphique extends Application {
             this.activerBoutons();
             this.incrementCycle();
             this.log("------------ " + messages.getString("cycle")+ " n°" + this.getCycle() + " ------------");
-            for (Tamagoshi tamagoshi : this.getListeTamagoshisEnCours()) {
-                tamagoshi.parler();
-                System.out.println(tamagoshi);
-            }
             for (TamaStage tamaStage : this.getListeTamaStage()) {
                 tamaStage.getTamaPane().updatePhase();
             }

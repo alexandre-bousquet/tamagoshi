@@ -39,19 +39,17 @@ public class TamaPane extends BorderPane {
     }
 
     public void manger() {
-        this.getTamagoshi().mange();
-        this.updatePhase();
+        this.updateMessage(this.getTamagoshi().mange());
     }
 
     public void jouer() {
-        this.getTamagoshi().joue();
-        this.updatePhase();
+        this.updateMessage(this.getTamagoshi().joue());
     }
 
     public void updatePhase() {
         this.getPhase();
         this.updatePicture();
-        this.updateMessage();
+        this.updateMessage(this.getTamagoshi().parler());
     }
 
     public void updatePicture() {
@@ -60,8 +58,8 @@ public class TamaPane extends BorderPane {
         this.setCenter(this.getImageView());
     }
 
-    public void updateMessage() {
-        this.setBottom(new Text(this.getMessage()));
+    public void updateMessage(String message) {
+        this.setBottom(new Text(message));
     }
 
     // Getters et setters

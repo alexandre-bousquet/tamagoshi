@@ -1,5 +1,6 @@
 package tamagoshi.graphic;
 
+import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -20,6 +21,7 @@ public class TamaStage extends Stage {
         group.getChildren().addAll(tamaPane, this.boutonNourrir, this.boutonJouer);
         Scene scene = new Scene(group);
         scene.getStylesheets().add(Objects.requireNonNull(this.getClass().getResource("/tamagoshi/style.css")).toExternalForm());
+        this.setOnCloseRequest(ev -> Platform.exit());
         this.setScene(scene);
         this.setTitle(tamaPane.getTamagoshi().getName());
         this.setResizable(false);
