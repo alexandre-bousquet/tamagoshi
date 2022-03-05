@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import tamagoshi.exceptions.NegativeLifeTimeException;
 import tamagoshi.jeu.TamaGame;
 import tamagoshi.tamagoshis.*;
 
@@ -16,8 +17,10 @@ import java.util.*;
 public class TamaGameGraphique extends Application {
     private TamaGame tamaGame;
     private int difficulty = 2;
-    private int lifeTime;
     private TextArea console;
+    private boolean peutNourrir = true;
+    private boolean peutJouer = true;
+    private int cycle = 0;
 
     /**
      * Liste des tamagoshis créer au départ du jeu.
@@ -68,7 +71,7 @@ public class TamaGameGraphique extends Application {
     /**
      * Initialise le jeu avec les méthodes précédentes.
      */
-    private void initialisation() {
+    private void initialisation() throws NegativeLifeTimeException {
         this.initNamesList();
         this.initTamagoshis();
         this.initLifeTime();
@@ -77,35 +80,38 @@ public class TamaGameGraphique extends Application {
     /**
      * Lance le jeu.
      */
-    public void play() {
+    public void play() throws NegativeLifeTimeException {
         this.initialisation();
-        int cycle = 1;
-        /*while (!this.listeTamagoshisEnCours.isEmpty() && cycle <= Tamagoshi.getLifeTime()) {
-            //Tamagoshi tamagoshi =
-            this.listeTamagoshisEnCours.removeIf(t -> t.getTamaPane().getTamagoshi().getEnergy() <= 0 || t.getFun() <= 0 || t.getAge() >= Tamagoshi.getLifeTime());
-            if (this.listeTamagoshisEnCours.isEmpty()) {
-                break;
+        this.nextCycle();
+        /*this.log("------------- " + TamaGame.messages.getString("endOfTheGame") + " ------------");
+        this.log("------------ " + TamaGame.messages.getString("result") + " -------------");*/
+    }
+
+    public void prepareNextCycle() {
+        if (!this.isPeutNourrir() && !this.isPeutJouer()) {
+            this.getListeTamagoshisEnCours().removeIf(t -> t.getEnergy() <= 0 || t.getFun() <= 0 || t.getAge() >= Tamagoshi.getLifeTime());
+            for (Tamagoshi tamagoshi : this.getListeTamagoshisEnCours()) {
+                for (int i = 0; i < this.getListeTamaStage().size(); i++) {
+                    System.out.println(this.getListeTamaStage().get(i).getTamaPane().getTamagoshi().equals(tamagoshi));
+                }
+                tamagoshi.consommeEnergy();
+                tamagoshi.consommeFun();
+                tamagoshi.vieillir();
             }
-            this.log("------------ " + TamaGame.messages.getString("cycle")+ " n°" + cycle + " ------------");
-            for (TamaStage t : this.listeTamagoshisEnCours) {
-                t.parler();
-            }
-            this.nourrir();
-            this.jouer();
-            for (Tamagoshi t : this.listeTamagoshisEnCours) {
-                t.consommeEnergy();
-                t.consommeFun();
-                t.vieillir();
-            }
-            cycle++;
-        }*/
-        this.log("------------- " + TamaGame.messages.getString("endOfTheGame") + " ------------");
-        this.log("------------ " + TamaGame.messages.getString("result") + " -------------");
-        //this.resultat();
+            this.nextCycle();
+        }
     }
 
     public void nextCycle() {
-
+        this.activerBoutons();
+        this.incrementCycle();
+        this.log("------------ " + TamaGame.messages.getString("cycle")+ " n°" + this.getCycle() + " ------------");
+        for (Tamagoshi tamagoshi : this.getListeTamagoshisEnCours()) {
+            tamagoshi.parler();
+        }
+        if (this.getCycle() >= Tamagoshi.getLifeTime() || this.getListeTamagoshisEnCours().isEmpty()) {
+            // TODO
+        }
     }
 
     private MenuBar generateMenuBar() {
@@ -185,18 +191,20 @@ public class TamaGameGraphique extends Application {
         return t;
     }
 
-    private void initLifeTime() {
-        this.lifeTime = 10;
+    private void initLifeTime() throws NegativeLifeTimeException {
+        Tamagoshi.setLifeTime(10);
     }
 
     private void activerBoutons() {
-        for (TamaStage tamaStage : this.listeTamaStage) {
+        this.setPeutNourrir(true);
+        this.setPeutJouer(true);
+        for (TamaStage tamaStage : this.getListeTamaStage()) {
             tamaStage.activerBoutonNourrir();
             tamaStage.activerBoutonJouer();
         }
     }
 
-    private void log(String message) {
+    protected void log(String message) {
         this.getConsole().appendText("\n" + message);
     }
 
@@ -228,5 +236,29 @@ public class TamaGameGraphique extends Application {
 
     private TamaGame getTamaGame() {
         return tamaGame;
+    }
+
+    public boolean isPeutNourrir() {
+        return peutNourrir;
+    }
+
+    public void setPeutNourrir(boolean peutNourrir) {
+        this.peutNourrir = peutNourrir;
+    }
+
+    public boolean isPeutJouer() {
+        return peutJouer;
+    }
+
+    public void setPeutJouer(boolean peutJouer) {
+        this.peutJouer = peutJouer;
+    }
+
+    public int getCycle() {
+        return cycle;
+    }
+
+    public void incrementCycle() {
+       this.cycle++;
     }
 }

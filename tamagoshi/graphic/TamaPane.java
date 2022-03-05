@@ -25,6 +25,7 @@ public class TamaPane extends BorderPane {
     }
 
     public void getPhase() {
+        //System.out.println(this.getTamagoshi());
         if (this.getTamagoshi().getEnergy() > 4 && this.getTamagoshi().getFun() > 4) {
             this.imageView = new ImageView(new Image(Objects.requireNonNull(this.getClass().getResourceAsStream("/tamagoshi/images/phase_1.jpg"))));
         } else if (this.getTamagoshi().getEnergy() <= 4 && this.getTamagoshi().getFun() <= 4) {
@@ -33,6 +34,8 @@ public class TamaPane extends BorderPane {
             this.imageView = new ImageView(new Image(Objects.requireNonNull(this.getClass().getResourceAsStream("/tamagoshi/images/phase_2.jpg"))));
         } else if (this.getTamagoshi().getEnergy() <= 0 || this.getTamagoshi().getFun() <= 0) {
             this.imageView = new ImageView(new Image(Objects.requireNonNull(this.getClass().getResourceAsStream("/tamagoshi/images/phase_4.png"))));
+        } else if (this.getTamagoshi().getAge() >= Tamagoshi.getLifeTime()) {
+            this.imageView = new ImageView(new Image(Objects.requireNonNull(this.getClass().getResourceAsStream("/tamagoshi/images/phase_0.png"))));
         }
     }
 

@@ -41,16 +41,22 @@ public class TamaStage extends Stage {
 
     public void nourrir() {
         this.getTamaPane().manger();
-        for (TamaStage tamaStage : this.tamaGameGraphique.getListeTamaStage()) {
+        for (TamaStage tamaStage : this.getTamaGameGraphique().getListeTamaStage()) {
             tamaStage.desactiverBoutonNourrir();
         }
+        this.getTamaGameGraphique().log("Vous avez nourri " + this.getTamaPane().getTamagoshi().getName());
+        this.getTamaGameGraphique().setPeutNourrir(false);
+        this.getTamaGameGraphique().prepareNextCycle();
     }
 
     public void jouer() {
         this.getTamaPane().jouer();
-        for (TamaStage tamaStage : this.tamaGameGraphique.getListeTamaStage()) {
+        for (TamaStage tamaStage : this.getTamaGameGraphique().getListeTamaStage()) {
             tamaStage.desactiverBoutonJouer();
         }
+        this.getTamaGameGraphique().log("Vous avez joué avec " + this.getTamaPane().getTamagoshi().getName());
+        this.getTamaGameGraphique().setPeutJouer(false);
+        this.getTamaGameGraphique().prepareNextCycle();
     }
 
     public void desactiverBoutonNourrir() {
@@ -69,6 +75,8 @@ public class TamaStage extends Stage {
         this.getBoutonJouer().setDisable(false);
     }
 
+    // Getters et setters
+
     public TamaPane getTamaPane() {
         return this.tamaPane;
     }
@@ -79,5 +87,9 @@ public class TamaStage extends Stage {
 
     public Button getBoutonJouer() {
         return this.boutonJouer;
+    }
+
+    public TamaGameGraphique getTamaGameGraphique() {
+        return tamaGameGraphique;
     }
 }
