@@ -2,16 +2,12 @@ package tamagoshi.graphic;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import tamagoshi.exceptions.NegativeLifeTimeException;
-import tamagoshi.jeu.TamaGame;
 import tamagoshi.tamagoshis.*;
 
 import java.util.*;
@@ -19,7 +15,6 @@ import java.util.*;
 import static tamagoshi.jeu.TamaGame.messages;
 
 public class TamaGameGraphique extends Application {
-    private TamaGame tamaGame;
     private int difficulty = 2;
     private TextArea console;
     private boolean peutNourrir = true;
@@ -48,7 +43,6 @@ public class TamaGameGraphique extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        this.tamaGame = new TamaGame();
         this.listeTamagoshisDepart = new ArrayList<>();
         this.listeTamagoshisEnCours = new ArrayList<>();
         this.listeTamaStage = new ArrayList<>();
@@ -263,10 +257,6 @@ public class TamaGameGraphique extends Application {
 
     private int getDifficulty() {
         return difficulty;
-    }
-
-    private TamaGame getTamaGame() {
-        return tamaGame;
     }
 
     private boolean isPeutNourrir() {

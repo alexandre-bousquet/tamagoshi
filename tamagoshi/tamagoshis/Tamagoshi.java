@@ -16,15 +16,15 @@ public abstract class Tamagoshi {
     /**
      * Energie maximale d'un tamagoshi.
      */
-    private int maxEnergy;
+    private final int maxEnergy;
     /**
      * Energie du tamagoshi (ne peut être supérieure à maxEnergy).
      */
     private int energy;
-    private String name;
+    private final String name;
     private static int lifeTime;
     private int fun;
-    private int maxFun;
+    private final int maxFun;
 
     public Tamagoshi(String name) {
         this.age = 0;
@@ -128,7 +128,7 @@ public abstract class Tamagoshi {
         if (this.getEnergy() <= 0) {
             System.out.println(this.getName() + " : Arrrrrggh !");
             return false;
-        } else if (this.fun <= 0) {
+        } else if (this.getFun() <= 0) {
             System.out.println(this.getName() + " : Je fais une dépression, ciao !");
             return false;
         } else {
