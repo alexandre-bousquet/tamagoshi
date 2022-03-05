@@ -67,8 +67,8 @@ public class TamaGameGraphique extends Application {
      */
     private void initialisation() throws NegativeLifeTimeException {
         this.initNamesList();
-        this.initTamagoshis();
         this.initLifeTime();
+        this.initTamagoshis();
     }
 
     /**
@@ -82,7 +82,7 @@ public class TamaGameGraphique extends Application {
     protected void prepareNextCycle() {
         if (!this.isPeutNourrir() && !this.isPeutJouer()) {
             this.getListeTamagoshisEnCours().removeIf(t -> !t.consommeEnergy() || !t.consommeFun() || !t.vieillir());
-            this.getListeTamaStage().removeIf(t -> !this.getListeTamagoshisEnCours().contains(t.getTamaPane().getTamagoshi()));
+            //this.getListeTamaStage().removeIf(t -> !this.getListeTamagoshisEnCours().contains(t.getTamaPane().getTamagoshi()));
             this.nextCycle();
         }
     }
@@ -134,6 +134,9 @@ public class TamaGameGraphique extends Application {
                 str.append(messages.getString("hasNotSurvived"));
             }
             this.log(String.valueOf(str));
+        }
+        for (TamaStage tamaStage : this.getListeTamaStage()) {
+            tamaStage.getTamaPane().updatePhase();
         }
         this.log(messages.getString("difficultyLevel") + " : " + this.getListeTamagoshisDepart().size());
         this.log(messages.getString("finalScore") + " : " + this.score() + "%");
@@ -224,8 +227,10 @@ public class TamaGameGraphique extends Application {
         this.setPeutNourrir(true);
         this.setPeutJouer(true);
         for (TamaStage tamaStage : this.getListeTamaStage()) {
-            tamaStage.activerBoutonNourrir();
-            tamaStage.activerBoutonJouer();
+            if (this.getListeTamagoshisEnCours().contains(tamaStage.getTamaPane().getTamagoshi())) {
+                tamaStage.activerBoutonNourrir();
+                tamaStage.activerBoutonJouer();
+            }
         }
     }
 

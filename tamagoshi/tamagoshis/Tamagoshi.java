@@ -10,7 +10,7 @@ import java.util.Random;
  */
 public abstract class Tamagoshi {
     /**
-     * Ege du tamagoshi.
+     * Age du tamagoshi.
      */
     private int age;
     /**
