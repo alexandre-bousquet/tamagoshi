@@ -2,12 +2,14 @@ package tamagoshi.graphic;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import tamagoshi.exceptions.NegativeLifeTimeException;
+import tamagoshi.jeu.TamaGame;
 import tamagoshi.tamagoshis.*;
 
 import java.io.*;
@@ -71,20 +73,29 @@ public class TamaGameGraphique extends Application {
         try (InputStream in = new FileInputStream(this.propertiesFileLocation)) {
             this.props.load(in);
         } catch (IOException e1) {
-            props.setProperty("difficulty", "3");
-            props.setProperty("lifeTime", "10");
-            try (OutputStream out = new FileOutputStream(this.propertiesFileLocation)) {
-                props.store(out, "Config");
-            } catch (IOException e2) {
-                e2.printStackTrace();
-            }
+            this.createProperties();
         }
+    }
+
+    private void createProperties() {
+        try (OutputStream out = new FileOutputStream(this.propertiesFileLocation)) {
+            props.store(out, "Config");
+        } catch (IOException e2) {
+            e2.printStackTrace();
+        }
+    }
+
+    private void updateOptions(int difficulty, int lifeTime, String language) {
+        props.setProperty("difficulty", String.valueOf(difficulty));
+        props.setProperty("lifeTime", String.valueOf(lifeTime));
+        props.setProperty("language", language);
     }
 
     /**
      * Initialise le jeu avec les méthodes précédentes.
      */
     private void initialisation() throws NegativeLifeTimeException {
+        messages = ResourceBundle.getBundle("MessageBundle", new Locale(this.props.getProperty("language")));
         this.initNamesList();
         this.initLifeTime();
         this.initTamagoshis();
@@ -111,6 +122,9 @@ public class TamaGameGraphique extends Application {
             this.activerBoutons();
             this.incrementCycle();
             this.log("------------ " + messages.getString("cycle")+ " n°" + this.getCycle() + " ------------");
+            for (Tamagoshi tamagoshi : this.getListeTamagoshisEnCours()) {
+                tamagoshi.parler();
+            }
             for (TamaStage tamaStage : this.getListeTamaStage()) {
                 tamaStage.getTamaPane().updatePhase();
             }
@@ -164,11 +178,29 @@ public class TamaGameGraphique extends Application {
     private MenuBar generateMenuBar() {
         Menu gameMenu = new Menu("Jeu");
         MenuItem newGameItem = new MenuItem("Nouvelle partie");
+        /*newGameItem.setOnAction(actionEvent -> {
+            try {
+                Platform.exit();
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            new TamaGameGraphique().start(new Stage());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        System.out.println("TEST");
+                    }
+                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });*/
         gameMenu.getItems().addAll(newGameItem);
 
         Menu optionsMenu = new Menu("Options");
-        MenuItem difficultyItem = new MenuItem("Difficulté");
-        optionsMenu.getItems().addAll(difficultyItem);
+        optionsMenu.setOnAction(actionEvent -> this.displayOptions());
 
         Menu helpMenu = new Menu("Aide");
         MenuItem aboutItem = new MenuItem("Informations");
@@ -179,6 +211,32 @@ public class TamaGameGraphique extends Application {
         MenuBar menuBar = new MenuBar();
         menuBar.getMenus().addAll(gameMenu, optionsMenu, helpMenu);
         return menuBar;
+    }
+
+    private void displayOptions() {
+        Stage infoStage = new Stage();
+        infoStage.setResizable(false);
+        infoStage.setTitle("Options");
+        Group infoGroup = new Group();
+
+        Label difficultyLabel = new Label("Difficulté");
+        difficultyLabel.getStyleClass().add("label");
+
+        Label lifeTimeLabel = new Label("Durée de vie");
+        difficultyLabel.getStyleClass().add("label");
+
+        Map<String, String> languageMap = new HashMap<>();
+        languageMap.put("fr_FR", "French");
+        languageMap.put("en_US", "English");
+
+
+        //ChoiceBox<String> choiceBox = new ChoiceBox<String>(languageMap);
+
+        infoGroup.getChildren().addAll(difficultyLabel);
+        Scene infoScene = new Scene(infoGroup);
+        infoScene.getStylesheets().add(Objects.requireNonNull(this.getClass().getResource("/tamagoshi/style.css")).toExternalForm());
+        infoStage.setScene(infoScene);
+        infoStage.show();
     }
 
     private void displayInformations() {
@@ -239,7 +297,7 @@ public class TamaGameGraphique extends Application {
     }
 
     private void initLifeTime() throws NegativeLifeTimeException {
-        Tamagoshi.setLifeTime(10);
+        Tamagoshi.setLifeTime(Integer.parseInt(this.props.getProperty("lifeTime")));
     }
 
     private void activerBoutons() {

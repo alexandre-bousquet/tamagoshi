@@ -22,6 +22,7 @@ public class TamaPane extends BorderPane {
         this.imageView = new ImageView();
         this.labelMessage.setWrapText(true);
         this.labelMessage.getStyleClass().add("message");
+        this.getTamagoshi().parler();
         this.updatePhase();
         this.setTop(this.labelNom);
     }
@@ -45,22 +46,22 @@ public class TamaPane extends BorderPane {
         } else if (energy <= 4 && fun <= 4) {
             this.getImageView().setImage(new Image(Objects.requireNonNull(this.getClass().getResourceAsStream("/tamagoshi/images/phase_3.png"))));
         }
-
-        System.out.println(this.getTamagoshi());
     }
 
     protected void manger() {
-        this.updateMessage(this.getTamagoshi().mange());
+        this.getTamagoshi().mange();
+        this.updateMessage();
     }
 
     protected void jouer() {
-        this.updateMessage(this.getTamagoshi().joue());
+        this.getTamagoshi().joue();
+        this.updateMessage();
     }
 
     protected void updatePhase() {
         this.getPhase();
         this.updatePicture();
-        this.updateMessage(this.getTamagoshi().parler());
+        this.updateMessage();
     }
 
     private void updatePicture() {
@@ -70,9 +71,9 @@ public class TamaPane extends BorderPane {
         this.getCenter().getStyleClass().add("customImageView");
     }
 
-    private void updateMessage(String message) {
+    private void updateMessage() {
         if (this.getTamagoshi().getAge() < Tamagoshi.getLifeTime()) {
-            this.getLabelMessage().setText(message);
+            this.getLabelMessage().setText(this.getTamagoshi().getMessage());
         } else {
             this.getLabelMessage().setText("Merci !");
         }

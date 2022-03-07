@@ -11,7 +11,7 @@ public class Cachotier extends Tamagoshi {
     }
 
     @Override
-    public String parler() {
-        return TamaGame.messages.getString("secretiveTalk");
+    public void parler() {
+        this.setMessage(TamaGame.messages.getString("secretiveTalk"));
     }
 }

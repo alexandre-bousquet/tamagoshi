@@ -146,7 +146,8 @@ public class TamaGame {
             }
             System.out.println("------------ " + messages.getString("cycle")+ " n°" + cycle + " ------------");
             for (Tamagoshi t : this.listeTamagoshisEnCours) {
-                System.out.println(t.getName() + " : " + t.parler());
+                t.parler();
+                System.out.println(t.getName() + " : " + t.getMessage());
             }
             this.nourrir();
             this.jouer();
@@ -168,7 +169,8 @@ public class TamaGame {
     private void nourrir() {
         System.out.println(messages.getString("whichTamagoshiToFeed"));
         Tamagoshi tamagoshi = this.getTamagoshiAction();
-        System.out.println(tamagoshi.getName() + " : " + tamagoshi.mange());
+        tamagoshi.mange();
+        System.out.println(tamagoshi.getName() + " : " + tamagoshi.getMessage());
     }
 
     /**
@@ -177,7 +179,8 @@ public class TamaGame {
     private void jouer() {
         System.out.println(messages.getString("whichTamagoshiToPlayWith"));
         Tamagoshi tamagoshi = this.getTamagoshiAction();
-        System.out.println(tamagoshi.getName() + " : " + tamagoshi.joue());
+        tamagoshi.joue();
+        System.out.println(tamagoshi.getName() + " : " + tamagoshi.getMessage());
     }
 
     /**
