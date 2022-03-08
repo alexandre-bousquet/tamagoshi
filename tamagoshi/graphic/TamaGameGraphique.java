@@ -24,7 +24,8 @@ public class TamaGameGraphique extends Application {
     private boolean peutJouer = true;
     private int cycle = 0;
     private final String propertiesFileLocation = System.getenv("LOCALAPPDATA") + "\\tamagoshiProperties.properties";
-    Properties props = new Properties();
+    private Properties props = new Properties();
+    private Stage stage;
 
     /**
      * Liste des tamagoshis créer au départ du jeu.
@@ -47,26 +48,15 @@ public class TamaGameGraphique extends Application {
     private final ArrayList<String> names = new ArrayList<>();
 
     @Override
-    public void start(Stage stage) throws Exception {
-        this.getProperties();
+    public void start(Stage stage) throws NegativeLifeTimeException {
+        this.play(stage);
+    }
 
-        this.listeTamagoshisDepart = new ArrayList<>();
-        this.listeTamagoshisEnCours = new ArrayList<>();
-        this.listeTamaStage = new ArrayList<>();
-        this.console = new TextArea("- Logs -");
-        this.console.setEditable(false);
-
-        BorderPane root = new BorderPane();
-        root.setTop(this.generateMenuBar());
-        root.setCenter(this.console);
-        Scene scene = new Scene(root, 500, 500);
-        stage.setOnCloseRequest(ev -> Platform.exit());
-        stage.setTitle("TamaGame");
-        stage.setResizable(false);
-        stage.setScene(scene);
-        stage.show();
-
-        this.play();
+    private void restart(Stage stage) throws NegativeLifeTimeException {
+        for (TamaStage t : this.getListeTamaStage()) {
+            t.close();
+        }
+        this.play(stage);
     }
 
     private void getProperties() {
@@ -79,16 +69,16 @@ public class TamaGameGraphique extends Application {
 
     private void createProperties() {
         try (OutputStream out = new FileOutputStream(this.propertiesFileLocation)) {
-            props.store(out, "Config");
+            this.props.store(out, "Config");
         } catch (IOException e2) {
             e2.printStackTrace();
         }
     }
 
     private void updateOptions(int difficulty, int lifeTime, String language) {
-        props.setProperty("difficulty", String.valueOf(difficulty));
-        props.setProperty("lifeTime", String.valueOf(lifeTime));
-        props.setProperty("language", language);
+        this.props.setProperty("difficulty", String.valueOf(difficulty));
+        this.props.setProperty("lifeTime", String.valueOf(lifeTime));
+        this.props.setProperty("language", language);
     }
 
     /**
@@ -104,7 +94,28 @@ public class TamaGameGraphique extends Application {
     /**
      * Lance le jeu.
      */
-    public void play() throws NegativeLifeTimeException {
+    public void play(Stage stage) throws NegativeLifeTimeException {
+        this.getProperties();
+
+        this.stage = stage;
+        this.listeTamagoshisDepart = new ArrayList<>();
+        this.listeTamagoshisEnCours = new ArrayList<>();
+        this.listeTamaStage = new ArrayList<>();
+        this.console = new TextArea("- Logs -");
+        this.console.setEditable(false);
+        this.cycle = 0;
+
+        BorderPane root = new BorderPane();
+        root.setTop(this.generateMenuBar());
+        root.setCenter(this.getConsole());
+        Scene scene = new Scene(root, 500, 500);
+
+        this.stage.setOnCloseRequest(ev -> Platform.exit());
+        this.stage.setTitle("TamaGame");
+        this.stage.setResizable(false);
+        this.stage.setScene(scene);
+        this.stage.show();
+
         this.initialisation();
         this.nextCycle();
     }
@@ -178,25 +189,13 @@ public class TamaGameGraphique extends Application {
     private MenuBar generateMenuBar() {
         Menu gameMenu = new Menu("Jeu");
         MenuItem newGameItem = new MenuItem("Nouvelle partie");
-        /*newGameItem.setOnAction(actionEvent -> {
+        newGameItem.setOnAction(actionEvent -> {
             try {
-                Platform.exit();
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            new TamaGameGraphique().start(new Stage());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        System.out.println("TEST");
-                    }
-                });
-
-            } catch (Exception e) {
+                this.restart(this.getStage());
+            } catch (NegativeLifeTimeException e) {
                 e.printStackTrace();
             }
-        });*/
+        });
         gameMenu.getItems().addAll(newGameItem);
 
         Menu optionsMenu = new Menu("Options");
@@ -363,5 +362,9 @@ public class TamaGameGraphique extends Application {
 
     private void incrementCycle() {
        this.cycle++;
+    }
+
+    public Stage getStage() {
+        return stage;
     }
 }

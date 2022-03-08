@@ -44,7 +44,6 @@ public abstract class Tamagoshi {
 
     /**
      * Le tamagoshi exprime dans quel état il est.
-     * @return boolean
      */
     public void parler() {
         if (this.getEnergy() > 4 && this.getFun() > 4) {
@@ -60,7 +59,6 @@ public abstract class Tamagoshi {
 
     /**
      * Remonte l'énergie du tamagoshi.
-     * @return boolean
      */
     public void mange() {
         if (this.getEnergy() < this.getMaxEnergy()) {
@@ -76,7 +74,6 @@ public abstract class Tamagoshi {
 
     /**
      * Remonte le fun du tamagoshi.
-     * @return boolean
      */
     public String joue() {
         if (this.getFun() < this.getMaxFun()) {
@@ -99,7 +96,6 @@ public abstract class Tamagoshi {
         this.energy--;
         if (this.getEnergy() <= 0) {
             this.setMessage(TamaGame.messages.getString("dieEmptyEnergy"));
-            System.out.println(this.getName() + " : " + TamaGame.messages.getString("dieEmptyEnergy"));
             return false;
         } else {
             return true;
@@ -114,7 +110,6 @@ public abstract class Tamagoshi {
         this.fun--;
         if (this.getFun() <= 0) {
             this.setMessage(TamaGame.messages.getString("dieEmptyFun"));
-            //System.out.println(this.getName() + " : " + TamaGame.messages.getString("dieEmptyFun"));
             return false;
         } else {
             return true;
