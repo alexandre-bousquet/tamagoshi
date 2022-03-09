@@ -121,7 +121,6 @@ public class TamaGameGraphique extends Application {
     protected void prepareNextCycle() {
         if (!this.isPeutNourrir() && !this.isPeutJouer()) {
             this.getListeTamagoshisEnCours().removeIf(t -> !t.consommeEnergy() || !t.consommeFun() || !t.vieillir());
-            //this.getListeTamaStage().removeIf(t -> !this.getListeTamagoshisEnCours().contains(t.getTamaPane().getTamagoshi()));
             this.nextCycle();
         }
     }
@@ -257,14 +256,14 @@ public class TamaGameGraphique extends Application {
         Scanner scan = new Scanner(Objects.requireNonNull(this.getClass().getResourceAsStream("/tamagoshi/names.txt")));
         while (scan.hasNextLine()) {
             String nom = scan.nextLine();
-            this.names.add(nom);
+            this.getNames().add(nom);
         }
         scan.close();
-        Collections.shuffle(this.names);
+        Collections.shuffle(this.getNames());
     }
 
     private void initTamagoshis() {
-        for (int i = 0; i < Integer.parseInt(this.props.getProperty("difficulty")); i++) {
+        for (int i = 0; i < Integer.parseInt(this.getProps().getProperty("difficulty")); i++) {
             Tamagoshi tamagoshi = this.generateRandomTamagoshi();
             TamaStage tamaStage = new TamaStage(new TamaPane(tamagoshi), this);
             this.getListeTamagoshisDepart().add(tamagoshi);
@@ -294,7 +293,7 @@ public class TamaGameGraphique extends Application {
     }
 
     private void initLifeTime() throws NegativeLifeTimeException {
-        Tamagoshi.setLifeTime(Integer.parseInt(this.props.getProperty("lifeTime")));
+        Tamagoshi.setLifeTime(Integer.parseInt(this.getProps().getProperty("lifeTime")));
     }
 
     private void activerBoutons() {
@@ -360,5 +359,17 @@ public class TamaGameGraphique extends Application {
 
     private Stage getStage() {
         return stage;
+    }
+
+    public String getPropertiesFileLocation() {
+        return propertiesFileLocation;
+    }
+
+    public Properties getProps() {
+        return props;
+    }
+
+    public ArrayList<String> getNames() {
+        return names;
     }
 }

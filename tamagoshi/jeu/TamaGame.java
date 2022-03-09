@@ -31,24 +31,11 @@ public class TamaGame {
 
     private static final Locale languageCourant = Locale.getDefault();
     public static ResourceBundle messages = ResourceBundle.getBundle("MessageBundle", languageCourant);
-    //public static ResourceBundle messages = ResourceBundle.getBundle("MessageBundle", Locale.US);
     public static Logger logger = Logger.getLogger("");
 
     public TamaGame() {
         logger.setLevel(Level.ALL);
         StreamHandler handler = new StreamHandler();
-        /*ConsoleHandler handler = new ConsoleHandler();
-        handler.setFormatter(new SimpleFormatter() {
-            private static final String format = "%3$s %n";
-
-            @Override
-            public synchronized String format(LogRecord lr) {
-                return String.format(format,
-                        lr.getMessage()
-                );
-            }
-        });
-        logger.addHandler(handler);*/
         logger.addHandler(handler);
         this.listeTamagoshisDepart = new ArrayList<>();
         this.listeTamagoshisEnCours = new ArrayList<>();
