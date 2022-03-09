@@ -210,9 +210,9 @@ public class TamaGameGraphique extends Application {
     }
 
     private void displayOptions() {
-        Stage infoStage = new Stage();
-        infoStage.setResizable(false);
-        infoStage.setTitle("Options");
+        Stage optionsStage = new Stage();
+        optionsStage.setResizable(false);
+        optionsStage.setTitle("Options");
         Group infoGroup = new Group();
 
         Label difficultyLabel = new Label("Difficulté");
@@ -225,14 +225,13 @@ public class TamaGameGraphique extends Application {
         languageMap.put("fr_FR", "French");
         languageMap.put("en_US", "English");
 
-
         //ChoiceBox<String> choiceBox = new ChoiceBox<String>(languageMap);
 
         infoGroup.getChildren().addAll(difficultyLabel);
         Scene infoScene = new Scene(infoGroup);
         infoScene.getStylesheets().add(Objects.requireNonNull(this.getClass().getResource("/tamagoshi/style.css")).toExternalForm());
-        infoStage.setScene(infoScene);
-        infoStage.show();
+        optionsStage.setScene(infoScene);
+        optionsStage.show();
     }
 
     private void displayInformations() {
