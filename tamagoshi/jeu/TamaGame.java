@@ -233,6 +233,7 @@ public class TamaGame {
         for (Tamagoshi t : this.listeTamagoshisDepart) {
             StringBuilder str = new StringBuilder()
                     .append(t.getName())
+                    .append(" ")
                     .append(messages.getString("whoWasA"))
                     .append(" ")
                     .append(t.getClass().getSimpleName())

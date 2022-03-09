@@ -90,7 +90,7 @@ public class TamaPane extends BorderPane {
         return imageView;
     }
 
-    public Label getLabelMessage() {
+    private Label getLabelMessage() {
         return labelMessage;
     }
 }

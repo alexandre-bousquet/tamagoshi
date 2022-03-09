@@ -69,7 +69,7 @@ public class TamaStage extends Stage {
         this.getBoutonNourrir().setDisable(false);
     }
 
-    public void desactiverBoutonJouer() {
+    private void desactiverBoutonJouer() {
         this.getBoutonJouer().setDisable(true);
     }
 

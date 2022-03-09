@@ -2,14 +2,12 @@ package tamagoshi.graphic;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import tamagoshi.exceptions.NegativeLifeTimeException;
-import tamagoshi.jeu.TamaGame;
 import tamagoshi.tamagoshis.*;
 
 import java.io.*;
@@ -18,13 +16,12 @@ import java.util.*;
 import static tamagoshi.jeu.TamaGame.messages;
 
 public class TamaGameGraphique extends Application {
-    private int difficulty = 0;
     private TextArea console;
     private boolean peutNourrir = true;
     private boolean peutJouer = true;
     private int cycle = 0;
     private final String propertiesFileLocation = System.getenv("LOCALAPPDATA") + "\\tamagoshiProperties.properties";
-    private Properties props = new Properties();
+    private final Properties props = new Properties();
     private Stage stage;
 
     /**
@@ -69,7 +66,8 @@ public class TamaGameGraphique extends Application {
 
     private void createProperties() {
         try (OutputStream out = new FileOutputStream(this.propertiesFileLocation)) {
-            this.props.store(out, "Config");
+            this.updateOptions(3, 10, "fr_FR");
+            this.props.store(out, "TamaGameGraphique config file");
         } catch (IOException e2) {
             e2.printStackTrace();
         }
@@ -332,12 +330,8 @@ public class TamaGameGraphique extends Application {
         return listeTamagoshisDepart;
     }
 
-    public List<TamaStage> getListeTamaStage() {
+    protected List<TamaStage> getListeTamaStage() {
         return listeTamaStage;
-    }
-
-    private int getDifficulty() {
-        return difficulty;
     }
 
     private boolean isPeutNourrir() {
@@ -364,7 +358,7 @@ public class TamaGameGraphique extends Application {
        this.cycle++;
     }
 
-    public Stage getStage() {
+    private Stage getStage() {
         return stage;
     }
 }
