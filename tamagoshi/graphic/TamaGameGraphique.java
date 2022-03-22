@@ -6,6 +6,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import tamagoshi.exceptions.NegativeLifeTimeException;
 import tamagoshi.tamagoshis.*;
@@ -262,9 +263,19 @@ public class TamaGameGraphique extends Application {
     }
 
     private void initTamagoshis() {
+        double screenSize = Screen.getPrimary().getBounds().getWidth();
+        double x = 0;
+        double y = 0;
         for (int i = 0; i < Integer.parseInt(this.getProps().getProperty("difficulty")); i++) {
             Tamagoshi tamagoshi = this.generateRandomTamagoshi();
             TamaStage tamaStage = new TamaStage(new TamaPane(tamagoshi), this);
+            tamaStage.setX(x);
+            tamaStage.setY(y);
+            x += screenSize / 4;
+            if (x == screenSize) {
+                x = 0;
+                y = tamaStage.getHeight() + 20;
+            }
             this.getListeTamagoshisDepart().add(tamagoshi);
             this.getListeTamagoshisEnCours().add(tamagoshi);
             this.getListeTamaStage().add(tamaStage);
@@ -306,6 +317,7 @@ public class TamaGameGraphique extends Application {
         }
     }
 
+    // TODO : Voir si je remplace par un textFlow
     protected void log(String message) {
         this.getConsole().appendText("\n" + message);
     }
