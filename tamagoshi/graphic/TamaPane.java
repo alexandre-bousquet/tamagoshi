@@ -8,23 +8,24 @@ import tamagoshi.tamagoshis.Tamagoshi;
 
 import java.util.Objects;
 
+import static tamagoshi.jeu.TamaGame.messages;
+
 public class TamaPane extends BorderPane {
     private final Tamagoshi tamagoshi;
-    private final Label labelNom;
-    private Label labelMessage;
-    private ImageView imageView;
+    private final Label labelMessage;
+    private final ImageView imageView;
 
     public TamaPane(Tamagoshi tamagoshi) {
+        Label labelNom = new Label(tamagoshi.getName());
+        labelNom.getStyleClass().add("label");
         this.tamagoshi = tamagoshi;
-        this.labelNom = new Label(tamagoshi.getName());
-        this.labelNom.getStyleClass().add("label");
         this.labelMessage = new Label();
         this.imageView = new ImageView();
         this.labelMessage.setWrapText(true);
         this.labelMessage.getStyleClass().add("message");
         this.getTamagoshi().parler();
         this.updatePhase();
-        this.setTop(this.labelNom);
+        this.setTop(labelNom);
     }
 
     private void getPhase() {
@@ -75,7 +76,7 @@ public class TamaPane extends BorderPane {
         if (this.getTamagoshi().getAge() < Tamagoshi.getLifeTime()) {
             this.getLabelMessage().setText(this.getTamagoshi().getMessage());
         } else {
-            this.getLabelMessage().setText("Merci !");
+            this.getLabelMessage().setText(messages.getString("thanks"));
         }
         this.setBottom(this.getLabelMessage());
     }

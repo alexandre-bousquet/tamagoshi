@@ -12,6 +12,9 @@ import java.util.logging.*;
  * Classe de jeu.
  */
 public class TamaGame {
+    /**
+     * Nombre de tamagoshis dans la partie.
+     */
     private int nbTamagoshis;
 
     /**
@@ -29,10 +32,24 @@ public class TamaGame {
      */
     private List<String> names = new ArrayList<>();
 
+    /**
+     * Langage courant de l'ordinateur qui exécute le programme.
+     */
     private static final Locale languageCourant = Locale.getDefault();
+
+    /**
+     * Messages dans la langue du langage courant.
+     */
     public static ResourceBundle messages = ResourceBundle.getBundle("MessageBundle", languageCourant);
+
+    /**
+     * Root logger pour faire des logs.
+     */
     public static Logger logger = Logger.getLogger("");
 
+    /**
+     * Constructeur de TamaGame
+     */
     public TamaGame() {
         logger.setLevel(Level.ALL);
         StreamHandler handler = new StreamHandler();
@@ -55,7 +72,7 @@ public class TamaGame {
     }
 
     /**
-     * Exception générée lorsque la saisie clavier != Integer || <= 0 || > 5 (voir méthode { @link TamaGame#setNbTamagoshis(int) })
+     * Exception générée lorsque la saisie clavier != Integer || <= 0 || > 5 (voir méthode { @link TamaGame#setNbTamagoshis(int) }).
      * Initialise les tamagoshis du jeu.
      */
     private void initTamagoshis() {
@@ -75,6 +92,10 @@ public class TamaGame {
         }
     }
 
+    /**
+     * Génère un tamagoshi aléatoire.
+     * @return Le tamagoshi généré.
+     */
     private Tamagoshi generateRandomTamagoshi() {
         double rand = Math.random();
         int indexName = new Random().nextInt(this.names.size());
@@ -96,8 +117,8 @@ public class TamaGame {
     }
 
     /**
-     * Exception générée lorsque la saisie clavier != Integer || <= 0 (voir méthode {@link Tamagoshi#setLifeTime(int)})
-     * Initialise la durée de vie des tamagoshis
+     * Exception générée lorsque la saisie clavier != Integer || <= 0 (voir méthode {@link Tamagoshi#setLifeTime(int)}).
+     * Initialise la durée de vie des tamagoshis.
      */
     private void initLifeTime() {
         System.out.println(messages.getString("askingLifeTime"));

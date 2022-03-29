@@ -7,6 +7,8 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import java.util.Objects;
 
+import static tamagoshi.jeu.TamaGame.messages;
+
 public class TamaStage extends Stage {
     private final TamaGameGraphique tamaGameGraphique;
     private final TamaPane tamaPane;
@@ -29,12 +31,12 @@ public class TamaStage extends Stage {
     }
 
     private void initBoutons() {
-        this.boutonNourrir = new Button("Nourrir");
+        this.boutonNourrir = new Button(messages.getString("feed"));
         this.boutonNourrir.getStyleClass().add("customButton");
         this.boutonNourrir.setLayoutX(50);
         this.boutonNourrir.setLayoutY(380);
         this.boutonNourrir.setOnAction(actionEvent -> this.nourrir());
-        this.boutonJouer = new Button("Jouer");
+        this.boutonJouer = new Button(messages.getString("play"));
         this.boutonJouer.getStyleClass().add("customButton");
         this.boutonJouer.setLayoutX(250);
         this.boutonJouer.setLayoutY(380);
@@ -46,7 +48,7 @@ public class TamaStage extends Stage {
         for (TamaStage tamaStage : this.getTamaGameGraphique().getListeTamaStage()) {
             tamaStage.desactiverBoutonNourrir();
         }
-        this.getTamaGameGraphique().log("Vous avez nourri " + this.getTamaPane().getTamagoshi().getName());
+        this.getTamaGameGraphique().log(messages.getString("youFed") + " " + this.getTamaPane().getTamagoshi().getName());
         this.getTamaGameGraphique().setPeutNourrir(false);
         this.getTamaGameGraphique().prepareNextCycle();
     }
@@ -56,7 +58,7 @@ public class TamaStage extends Stage {
         for (TamaStage tamaStage : this.getTamaGameGraphique().getListeTamaStage()) {
             tamaStage.desactiverBoutonJouer();
         }
-        this.getTamaGameGraphique().log("Vous avez joué avec " + this.getTamaPane().getTamagoshi().getName());
+        this.getTamaGameGraphique().log(messages.getString("youPlayedWith") + " " + this.getTamaPane().getTamagoshi().getName());
         this.getTamaGameGraphique().setPeutJouer(false);
         this.getTamaGameGraphique().prepareNextCycle();
     }

@@ -59,25 +59,34 @@ public class TamaGameGraphique extends Application {
 
     private void getProperties() {
         try (InputStream in = new FileInputStream(this.propertiesFileLocation)) {
-            this.props.load(in);
+            this.getProps().load(in);
         } catch (IOException e1) {
+            /*this.getProps().setProperty("difficulty", String.valueOf(3));
+            this.getProps().setProperty("lifeTime", String.valueOf(10));
+            this.getProps().setProperty("language", "fr_FR");*/
             this.createProperties();
         }
     }
 
     private void createProperties() {
         try (OutputStream out = new FileOutputStream(this.propertiesFileLocation)) {
-            this.updateOptions(3, 10, "fr_FR");
-            this.props.store(out, "TamaGameGraphique config file");
+            //this.updateOptions(Integer.parseInt(this.getProps().getProperty("difficulty")), Integer.parseInt(this.getProps().getProperty("lifeTime")), this.getProps().getProperty("language"));
+            this.updateProperties(3, 10, "fr_FR");
+            this.getProps().store(out, "TamaGameGraphique config file");
         } catch (IOException e2) {
             e2.printStackTrace();
         }
     }
 
-    private void updateOptions(int difficulty, int lifeTime, String language) {
-        this.props.setProperty("difficulty", String.valueOf(difficulty));
-        this.props.setProperty("lifeTime", String.valueOf(lifeTime));
-        this.props.setProperty("language", language);
+    private void updateProperties(int difficulty, int lifeTime, String language) {
+        try (OutputStream out = new FileOutputStream(this.propertiesFileLocation)) {
+            this.getProps().setProperty("difficulty", String.valueOf(difficulty));
+            this.getProps().setProperty("lifeTime", String.valueOf(lifeTime));
+            this.getProps().setProperty("language", language);
+            this.getProps().store(out, "TamaGameGraphique config file");
+        } catch (IOException e2) {
+            e2.printStackTrace();
+        }
     }
 
     /**
@@ -185,8 +194,8 @@ public class TamaGameGraphique extends Application {
     }
 
     private MenuBar generateMenuBar() {
-        Menu gameMenu = new Menu("Jeu");
-        MenuItem newGameItem = new MenuItem("Nouvelle partie");
+        Menu gameMenu = new Menu(messages.getString("game"));
+        MenuItem newGameItem = new MenuItem(messages.getString("newGame"));
         newGameItem.setOnAction(actionEvent -> {
             try {
                 this.restart(this.getStage());
@@ -196,13 +205,15 @@ public class TamaGameGraphique extends Application {
         });
         gameMenu.getItems().addAll(newGameItem);
 
-        Menu optionsMenu = new Menu("Options");
-        optionsMenu.setOnAction(actionEvent -> this.displayOptions());
+        Menu optionsMenu = new Menu(messages.getString("settings"));
+        MenuItem optionsItem = new MenuItem(messages.getString("settings"));
+        optionsItem.setOnAction(actionEvent -> this.displayOptions());
+        optionsMenu.getItems().addAll(optionsItem);
 
-        Menu helpMenu = new Menu("Aide");
-        MenuItem aboutItem = new MenuItem("Informations");
+        Menu helpMenu = new Menu(messages.getString("help"));
+        MenuItem aboutItem = new MenuItem(messages.getString("informations"));
         aboutItem.setOnAction(actionEvent -> this.displayInformations());
-        MenuItem helpItem = new MenuItem("Aide");
+        MenuItem helpItem = new MenuItem(messages.getString("help"));
         helpMenu.getItems().addAll(aboutItem, helpItem);
 
         MenuBar menuBar = new MenuBar();
@@ -213,33 +224,68 @@ public class TamaGameGraphique extends Application {
     private void displayOptions() {
         Stage optionsStage = new Stage();
         optionsStage.setResizable(false);
-        optionsStage.setTitle("Options");
+        optionsStage.setTitle(messages.getString("settings"));
         Group infoGroup = new Group();
 
-        Label difficultyLabel = new Label("Difficulté");
+        Group difficultyGroup = new Group();
+        Label difficultyLabel = new Label(messages.getString("difficulty"));
         difficultyLabel.getStyleClass().add("label");
+        Slider difficultySlider = new Slider(3,8, Integer.parseInt(this.getProps().getProperty("difficulty")));
+        difficultySlider.setShowTickLabels(true);
+        difficultySlider.setShowTickMarks(true);
+        difficultySlider.setMajorTickUnit(1);
+        difficultySlider.setMinorTickCount(0);
+        difficultySlider.setBlockIncrement(1);
+        difficultySlider.setSnapToTicks(true);
+        difficultySlider.setLayoutX(20);
+        difficultySlider.setLayoutY(50);
+        difficultyGroup.getChildren().addAll(difficultyLabel, difficultySlider);
 
-        Label lifeTimeLabel = new Label("Durée de vie");
-        difficultyLabel.getStyleClass().add("label");
+        Group lifeTimeGroup = new Group();
+        Label lifeTimeLabel = new Label(messages.getString("lifetime"));
+        lifeTimeLabel.setLayoutY(90);
+        lifeTimeLabel.getStyleClass().add("label");
+        Slider lifeTimeSlider = new Slider(10,30, Integer.parseInt(this.getProps().getProperty("lifeTime")));
+        lifeTimeSlider.setShowTickLabels(true);
+        lifeTimeSlider.setShowTickMarks(true);
+        lifeTimeSlider.setMajorTickUnit(5);
+        lifeTimeSlider.setMinorTickCount(0);
+        lifeTimeSlider.setBlockIncrement(1);
+        lifeTimeSlider.setSnapToTicks(true);
+        lifeTimeSlider.setLayoutX(20);
+        lifeTimeSlider.setLayoutY(140);
+        lifeTimeGroup.getChildren().addAll(lifeTimeLabel, lifeTimeSlider);
 
         Map<String, String> languageMap = new HashMap<>();
         languageMap.put("fr_FR", "French");
         languageMap.put("en_US", "English");
 
+        Button saveButton = new Button("Sauvegarder");
+        Label saveInfoLabel = new Label("La sauvegarde s'effectuera au prochain lancement du jeu");
+        saveButton.setLayoutX(20);
+        saveButton.setLayoutY(200);
+        saveButton.setOnAction(actionEvent -> {
+            this.updateProperties((int) difficultySlider.getValue(), (int) lifeTimeSlider.getValue(), "fr_FR");
+            optionsStage.close();
+        });
+
         //ChoiceBox<String> choiceBox = new ChoiceBox<String>(languageMap);
 
-        infoGroup.getChildren().addAll(difficultyLabel);
-        Scene infoScene = new Scene(infoGroup);
+        infoGroup.getChildren().addAll(difficultyGroup, lifeTimeGroup, saveButton);
+        Scene infoScene = new Scene(infoGroup, 300, 300);
         infoScene.getStylesheets().add(Objects.requireNonNull(this.getClass().getResource("/tamagoshi/style.css")).toExternalForm());
         optionsStage.setScene(infoScene);
         optionsStage.show();
     }
 
+    /**
+     * Affiches diverses informations sur le jeu comme son auteur.
+     */
     private void displayInformations() {
         Stage infoStage = new Stage();
         infoStage.setResizable(false);
-        infoStage.setTitle("Informations");
-        Label infoLabel = new Label("Jeu créé par Alexandre Bousquet, étudiant en LP APIDAE à l'IUT de Montpellier.");
+        infoStage.setTitle(messages.getString("informations"));
+        Label infoLabel = new Label(messages.getString("gameInfos"));
         infoLabel.getStyleClass().add("label");
         Group infoGroup = new Group();
         infoGroup.getChildren().add(infoLabel);
@@ -262,6 +308,9 @@ public class TamaGameGraphique extends Application {
         Collections.shuffle(this.getNames());
     }
 
+    /**
+     * Initialise les tamagoshis du jeu.
+     */
     private void initTamagoshis() {
         double screenSize = Screen.getPrimary().getBounds().getWidth();
         double x = 0;
@@ -282,6 +331,10 @@ public class TamaGameGraphique extends Application {
         }
     }
 
+    /**
+     * Génère un tamagoshi aléatoire.
+     * @return Le tamagoshi généré.
+     */
     private Tamagoshi generateRandomTamagoshi() {
         double rand = Math.random();
         int indexName = new Random().nextInt(this.names.size());
