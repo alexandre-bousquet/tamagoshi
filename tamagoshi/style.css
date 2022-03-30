@@ -14,6 +14,11 @@
     -fx-max-width: 400;
 }
 
+.messageRed {
+    -fx-text-fill: red;
+    -fx-font-size: 10;
+}
+
 .customButton {
     -fx-font-weight: bold;
     -fx-font-size: 20;

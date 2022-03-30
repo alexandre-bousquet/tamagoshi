@@ -61,14 +61,14 @@ public class TamaGame {
     /**
      * Initialise la liste des noms possibles pour les tamagoshis.
      */
-    private void initNamesList() {
+    public static void initNamesList(List<String> listeNom) {
         Scanner scan = new Scanner(Objects.requireNonNull(TamaGame.class.getResourceAsStream("/tamagoshi/names.txt")));
         while (scan.hasNextLine()) {
             String nom = scan.nextLine();
-            names.add(nom);
+            listeNom.add(nom);
         }
         scan.close();
-        Collections.shuffle(names);
+        Collections.shuffle(listeNom);
     }
 
     /**
@@ -86,7 +86,7 @@ public class TamaGame {
             }
         }
         for (int i = 0; i < this.getNbTamagoshis(); i++) {
-            Tamagoshi t = generateRandomTamagoshi();
+            Tamagoshi t = generateRandomTamagoshi(this.names);
             this.listeTamagoshisDepart.add(t);
             this.listeTamagoshisEnCours.add(t);
         }
@@ -96,11 +96,11 @@ public class TamaGame {
      * Génère un tamagoshi aléatoire.
      * @return Le tamagoshi généré.
      */
-    private Tamagoshi generateRandomTamagoshi() {
+    public static Tamagoshi generateRandomTamagoshi(List<String> listeNom) {
         double rand = Math.random();
-        int indexName = new Random().nextInt(this.names.size());
-        String name = this.names.get(indexName);
-        this.names.remove(indexName);
+        int indexName = new Random().nextInt(listeNom.size());
+        String name = listeNom.get(indexName);
+        listeNom.remove(indexName);
         Tamagoshi t;
         if (rand <= 0.40) {
             t = new GrosJoueur(name);
@@ -136,7 +136,7 @@ public class TamaGame {
      * Initialise le jeu avec les méthodes précédentes.
      */
     private void initialisation() {
-        this.initNamesList();
+        initNamesList(this.names);
         this.initTamagoshis();
         this.initLifeTime();
     }

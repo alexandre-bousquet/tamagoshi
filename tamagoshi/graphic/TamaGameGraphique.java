@@ -13,8 +13,9 @@ import tamagoshi.tamagoshis.*;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
-import static tamagoshi.jeu.TamaGame.messages;
+import static tamagoshi.jeu.TamaGame.*;
 
 public class TamaGameGraphique extends Application {
     private TextArea console;
@@ -93,8 +94,8 @@ public class TamaGameGraphique extends Application {
      * Initialise le jeu avec les méthodes précédentes.
      */
     private void initialisation() throws NegativeLifeTimeException {
-        messages = ResourceBundle.getBundle("MessageBundle", new Locale(this.props.getProperty("language")));
-        this.initNamesList();
+        messages = ResourceBundle.getBundle("MessageBundle", new Locale(this.getProps().getProperty("language")));
+        initNamesList(this.getNames());
         this.initLifeTime();
         this.initTamagoshis();
     }
@@ -112,6 +113,7 @@ public class TamaGameGraphique extends Application {
         this.console = new TextArea("- Logs -");
         this.console.setEditable(false);
         this.cycle = 0;
+        this.initialisation();
 
         BorderPane root = new BorderPane();
         root.setTop(this.generateMenuBar());
@@ -124,7 +126,6 @@ public class TamaGameGraphique extends Application {
         this.stage.setScene(scene);
         this.stage.show();
 
-        this.initialisation();
         this.nextCycle();
     }
 
@@ -227,6 +228,7 @@ public class TamaGameGraphique extends Application {
         optionsStage.setTitle(messages.getString("settings"));
         Group infoGroup = new Group();
 
+        // Difficulté (nombre de tamagoshis)
         Group difficultyGroup = new Group();
         Label difficultyLabel = new Label(messages.getString("difficulty"));
         difficultyLabel.getStyleClass().add("label");
@@ -241,6 +243,7 @@ public class TamaGameGraphique extends Application {
         difficultySlider.setLayoutY(50);
         difficultyGroup.getChildren().addAll(difficultyLabel, difficultySlider);
 
+        // Durée de la partie
         Group lifeTimeGroup = new Group();
         Label lifeTimeLabel = new Label(messages.getString("lifetime"));
         lifeTimeLabel.setLayoutY(90);
@@ -256,30 +259,56 @@ public class TamaGameGraphique extends Application {
         lifeTimeSlider.setLayoutY(140);
         lifeTimeGroup.getChildren().addAll(lifeTimeLabel, lifeTimeSlider);
 
+        // Langues (FR et EN)
+        Group langageGroup = new Group();
         Map<String, String> languageMap = new HashMap<>();
-        languageMap.put("fr_FR", "French");
-        languageMap.put("en_US", "English");
+        languageMap.put(messages.getString("french"), "fr_FR");
+        languageMap.put(messages.getString("english"), "en_US");
+        Label langageLabel = new Label(messages.getString("language"));
+        langageLabel.setLayoutY(175);
+        langageLabel.getStyleClass().add("label");
+        AtomicReference<String> langageSelected = new AtomicReference<>(this.getProps().getProperty("language"));
+        final ToggleGroup langageToggleGroup = new ToggleGroup();
+        int index = 0;
+        for (String s : languageMap.keySet()) {
+            index++;
+            RadioButton radioButton = new RadioButton(s);
+            radioButton.setToggleGroup(langageToggleGroup);
+            radioButton.setLayoutX(20);
+            radioButton.setLayoutY(langageLabel.getLayoutY() + 20 + (index * 30));
+            radioButton.setOnAction(actionEvent -> langageSelected.set(languageMap.get(s)));
+            if (langageSelected.get().equalsIgnoreCase(languageMap.get(s))) {
+                radioButton.setSelected(true);
+            }
+            langageGroup.getChildren().add(radioButton);
+        }
+        langageGroup.getChildren().add(langageLabel);
 
-        Button saveButton = new Button("Sauvegarder");
-        Label saveInfoLabel = new Label("La sauvegarde s'effectuera au prochain lancement du jeu");
+        // Bouton de sauvegarde des options
+        Group saveGroup = new Group();
+        Label saveInfoLabel = new Label(messages.getString("changesNextLaunch"));
+        saveInfoLabel.getStyleClass().add("message");
+        saveInfoLabel.getStyleClass().add("messageRed");
+        saveInfoLabel.setLayoutY(310);
+        Button saveButton = new Button(messages.getString("save"));
         saveButton.setLayoutX(20);
-        saveButton.setLayoutY(200);
+        saveButton.setLayoutY(300);
         saveButton.setOnAction(actionEvent -> {
-            this.updateProperties((int) difficultySlider.getValue(), (int) lifeTimeSlider.getValue(), "fr_FR");
+            this.updateProperties((int) difficultySlider.getValue(), (int) lifeTimeSlider.getValue(), langageSelected.get());
             optionsStage.close();
         });
+        saveGroup.getChildren().addAll(saveButton, saveInfoLabel);
 
-        //ChoiceBox<String> choiceBox = new ChoiceBox<String>(languageMap);
-
-        infoGroup.getChildren().addAll(difficultyGroup, lifeTimeGroup, saveButton);
-        Scene infoScene = new Scene(infoGroup, 300, 300);
+        // Paramétrage de la fenêtre
+        infoGroup.getChildren().addAll(difficultyGroup, lifeTimeGroup, langageGroup, saveGroup);
+        Scene infoScene = new Scene(infoGroup, 360, 360);
         infoScene.getStylesheets().add(Objects.requireNonNull(this.getClass().getResource("/tamagoshi/style.css")).toExternalForm());
         optionsStage.setScene(infoScene);
         optionsStage.show();
     }
 
     /**
-     * Affiches diverses informations sur le jeu comme son auteur.
+     * Affiche diverses informations sur le jeu comme son auteur.
      */
     private void displayInformations() {
         Stage infoStage = new Stage();
@@ -296,19 +325,6 @@ public class TamaGameGraphique extends Application {
     }
 
     /**
-     * Initialise la liste des noms possibles pour les tamagoshis.
-     */
-    private void initNamesList() {
-        Scanner scan = new Scanner(Objects.requireNonNull(this.getClass().getResourceAsStream("/tamagoshi/names.txt")));
-        while (scan.hasNextLine()) {
-            String nom = scan.nextLine();
-            this.getNames().add(nom);
-        }
-        scan.close();
-        Collections.shuffle(this.getNames());
-    }
-
-    /**
      * Initialise les tamagoshis du jeu.
      */
     private void initTamagoshis() {
@@ -316,7 +332,7 @@ public class TamaGameGraphique extends Application {
         double x = 0;
         double y = 0;
         for (int i = 0; i < Integer.parseInt(this.getProps().getProperty("difficulty")); i++) {
-            Tamagoshi tamagoshi = this.generateRandomTamagoshi();
+            Tamagoshi tamagoshi = generateRandomTamagoshi(this.getNames());
             TamaStage tamaStage = new TamaStage(new TamaPane(tamagoshi), this);
             tamaStage.setX(x);
             tamaStage.setY(y);
@@ -332,29 +348,9 @@ public class TamaGameGraphique extends Application {
     }
 
     /**
-     * Génère un tamagoshi aléatoire.
-     * @return Le tamagoshi généré.
+     * Initialise la durée de vie des Tamagoshis (durée de la partie)
+     * @throws NegativeLifeTimeException Si durée de vie négative
      */
-    private Tamagoshi generateRandomTamagoshi() {
-        double rand = Math.random();
-        int indexName = new Random().nextInt(this.names.size());
-        String name = this.names.get(indexName);
-        this.names.remove(indexName);
-        Tamagoshi t;
-        if (rand <= 0.40) {
-            t = new GrosJoueur(name);
-        } else if (rand <= 0.8) {
-            t = new GrosMangeur(name);
-        } else if (rand <= 0.9) {
-            t = new Cachotier(name);
-        } else if (rand <= 0.95) {
-            t = new Bipolaire(name);
-        } else {
-            t = new Suicidaire(name);
-        }
-        return t;
-    }
-
     private void initLifeTime() throws NegativeLifeTimeException {
         Tamagoshi.setLifeTime(Integer.parseInt(this.getProps().getProperty("lifeTime")));
     }
@@ -425,15 +421,11 @@ public class TamaGameGraphique extends Application {
         return stage;
     }
 
-    public String getPropertiesFileLocation() {
-        return propertiesFileLocation;
-    }
-
-    public Properties getProps() {
+    private Properties getProps() {
         return props;
     }
 
-    public ArrayList<String> getNames() {
+    private ArrayList<String> getNames() {
         return names;
     }
 }
