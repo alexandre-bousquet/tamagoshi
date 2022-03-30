@@ -62,16 +62,12 @@ public class TamaGameGraphique extends Application {
         try (InputStream in = new FileInputStream(this.propertiesFileLocation)) {
             this.getProps().load(in);
         } catch (IOException e1) {
-            /*this.getProps().setProperty("difficulty", String.valueOf(3));
-            this.getProps().setProperty("lifeTime", String.valueOf(10));
-            this.getProps().setProperty("language", "fr_FR");*/
             this.createProperties();
         }
     }
 
     private void createProperties() {
         try (OutputStream out = new FileOutputStream(this.propertiesFileLocation)) {
-            //this.updateOptions(Integer.parseInt(this.getProps().getProperty("difficulty")), Integer.parseInt(this.getProps().getProperty("lifeTime")), this.getProps().getProperty("language"));
             this.updateProperties(3, 10, "fr_FR");
             this.getProps().store(out, "TamaGameGraphique config file");
         } catch (IOException e2) {
@@ -95,7 +91,6 @@ public class TamaGameGraphique extends Application {
      */
     private void initialisation() throws NegativeLifeTimeException {
         messages = ResourceBundle.getBundle("MessageBundle", new Locale(this.getProps().getProperty("language")));
-        initNamesList(this.getNames());
         this.initLifeTime();
         this.initTamagoshis();
     }
@@ -328,11 +323,12 @@ public class TamaGameGraphique extends Application {
      * Initialise les tamagoshis du jeu.
      */
     private void initTamagoshis() {
+        FabriqueTamagoshi.getInstance();
         double screenSize = Screen.getPrimary().getBounds().getWidth();
         double x = 0;
         double y = 0;
         for (int i = 0; i < Integer.parseInt(this.getProps().getProperty("difficulty")); i++) {
-            Tamagoshi tamagoshi = generateRandomTamagoshi(this.getNames());
+            Tamagoshi tamagoshi = FabriqueTamagoshi.generateRandomTamagoshi();
             TamaStage tamaStage = new TamaStage(new TamaPane(tamagoshi), this);
             tamaStage.setX(x);
             tamaStage.setY(y);

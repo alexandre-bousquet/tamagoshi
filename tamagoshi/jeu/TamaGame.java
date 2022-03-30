@@ -59,24 +59,12 @@ public class TamaGame {
     }
 
     /**
-     * Initialise la liste des noms possibles pour les tamagoshis.
-     */
-    public static void initNamesList(List<String> listeNom) {
-        Scanner scan = new Scanner(Objects.requireNonNull(TamaGame.class.getResourceAsStream("/tamagoshi/names.txt")));
-        while (scan.hasNextLine()) {
-            String nom = scan.nextLine();
-            listeNom.add(nom);
-        }
-        scan.close();
-        Collections.shuffle(listeNom);
-    }
-
-    /**
      * Exception générée lorsque la saisie clavier != Integer || <= 0 || > 5 (voir méthode { @link TamaGame#setNbTamagoshis(int) }).
      * Initialise les tamagoshis du jeu.
      */
     private void initTamagoshis() {
         System.out.println(messages.getString("askingHowManyTamagoshiToPlayWith"));
+        FabriqueTamagoshi.getInstance();
         while (true) {
             try {
                 this.setNbTamagoshis(Integer.parseInt(User.saisieClavier()));
@@ -86,34 +74,10 @@ public class TamaGame {
             }
         }
         for (int i = 0; i < this.getNbTamagoshis(); i++) {
-            Tamagoshi t = generateRandomTamagoshi(this.names);
+            Tamagoshi t = FabriqueTamagoshi.generateRandomTamagoshi();
             this.listeTamagoshisDepart.add(t);
             this.listeTamagoshisEnCours.add(t);
         }
-    }
-
-    /**
-     * Génère un tamagoshi aléatoire.
-     * @return Le tamagoshi généré.
-     */
-    public static Tamagoshi generateRandomTamagoshi(List<String> listeNom) {
-        double rand = Math.random();
-        int indexName = new Random().nextInt(listeNom.size());
-        String name = listeNom.get(indexName);
-        listeNom.remove(indexName);
-        Tamagoshi t;
-        if (rand <= 0.40) {
-            t = new GrosJoueur(name);
-        } else if (rand <= 0.8) {
-            t = new GrosMangeur(name);
-        } else if (rand <= 0.9) {
-            t = new Cachotier(name);
-        } else if (rand <= 0.95) {
-            t = new Bipolaire(name);
-        } else {
-            t = new Suicidaire(name);
-        }
-        return t;
     }
 
     /**
@@ -136,7 +100,6 @@ public class TamaGame {
      * Initialise le jeu avec les méthodes précédentes.
      */
     private void initialisation() {
-        initNamesList(this.names);
         this.initTamagoshis();
         this.initLifeTime();
     }
