@@ -6,6 +6,10 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import tamagoshi.exceptions.NegativeLifeTimeException;
@@ -18,7 +22,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import static tamagoshi.jeu.TamaGame.*;
 
 public class TamaGameGraphique extends Application {
-    private TextArea console;
+    private TextFlow console;
     private boolean peutNourrir = true;
     private boolean peutJouer = true;
     private int cycle = 0;
@@ -105,8 +109,11 @@ public class TamaGameGraphique extends Application {
         this.listeTamagoshisDepart = new ArrayList<>();
         this.listeTamagoshisEnCours = new ArrayList<>();
         this.listeTamaStage = new ArrayList<>();
-        this.console = new TextArea("- Logs -");
-        this.console.setEditable(false);
+        this.console = new TextFlow();
+        Text logTitle = new Text("[Logs]");
+        //logTitle.getStyleClass().add("message");
+        logTitle.setFont(new Font(25));
+        this.console.getChildren().add(logTitle);
         this.cycle = 0;
         this.initialisation();
 
@@ -114,6 +121,7 @@ public class TamaGameGraphique extends Application {
         root.setTop(this.generateMenuBar());
         root.setCenter(this.getConsole());
         Scene scene = new Scene(root, 500, 500);
+        //scene.getStylesheets().add(Objects.requireNonNull(this.getClass().getResource("/tamagoshi/style.css")).toExternalForm());
 
         this.stage.setOnCloseRequest(ev -> Platform.exit());
         this.stage.setTitle("TamaGame");
@@ -135,7 +143,7 @@ public class TamaGameGraphique extends Application {
         if (this.getCycle() < Tamagoshi.getLifeTime() && !this.getListeTamagoshisEnCours().isEmpty()) {
             this.activerBoutons();
             this.incrementCycle();
-            this.log("------------ " + messages.getString("cycle")+ " n°" + this.getCycle() + " ------------");
+            this.log("[" + messages.getString("cycle")+ " n°" + this.getCycle() + "]");
             for (Tamagoshi tamagoshi : this.getListeTamagoshisEnCours()) {
                 tamagoshi.parler();
             }
@@ -362,9 +370,10 @@ public class TamaGameGraphique extends Application {
         }
     }
 
-    // TODO : Voir si je remplace par un textFlow
     protected void log(String message) {
-        this.getConsole().appendText("\n" + message);
+        Text text = new Text("\n" + message);
+        text.setFont(new Font(15));
+        this.getConsole().getChildren().add(text);
     }
 
     public static void main(String[] args) {
@@ -373,7 +382,7 @@ public class TamaGameGraphique extends Application {
 
     // Getters et setters
 
-    private TextArea getConsole() {
+    private TextFlow getConsole() {
         return console;
     }
 
