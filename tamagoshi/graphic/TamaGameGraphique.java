@@ -10,7 +10,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -24,12 +23,39 @@ import java.util.concurrent.atomic.AtomicReference;
 import static tamagoshi.jeu.TamaGame.*;
 
 public class TamaGameGraphique extends Application {
+    /**
+     * Console permettant les affichages.
+     */
     private TextFlow console;
+
+    /**
+     * Booléen qui indique si on peut nourrir les tamagoshis.
+     */
     private boolean peutNourrir = true;
+
+    /**
+     * Booléen qui indique si on peut jouer avec les tamagoshis.
+     */
     private boolean peutJouer = true;
+
+    /**
+     * Entier qui représente quel à quel tour du jeu nous sommes.
+     */
     private int cycle = 0;
+
+    /**
+     * Emplacement du fichier contenant les propriétés sauvegardées.
+     */
     private final String propertiesFileLocation = System.getenv("LOCALAPPDATA") + "\\tamagoshiProperties.properties";
+
+    /**
+     * Propriétés extraites du fichier tamagoshiProperties.properties (emplacement : {@link TamaGameGraphique#propertiesFileLocation}).
+     */
     private final Properties props = new Properties();
+
+    /**
+     * Stage de l'application.
+     */
     private Stage stage;
 
     /**
@@ -47,17 +73,17 @@ public class TamaGameGraphique extends Application {
      */
     private List<TamaStage> listeTamaStage;
 
-    /**
-     * Liste des noms possibles pour les tamagoshis.
-     */
-    private final ArrayList<String> names = new ArrayList<>();
-
     @Override
     public void start(Stage stage) throws NegativeLifeTimeException {
         this.play(stage);
     }
 
-    private void restart(Stage stage) throws NegativeLifeTimeException {
+    /**
+     * Permet de relancer le jeu.
+     * @param stage {@link TamaGameGraphique#stage}
+     * @throws NegativeLifeTimeException Si
+     */
+    private void restart(Stage stage) {
         for (TamaStage t : this.getListeTamaStage()) {
             t.close();
         }
@@ -76,8 +102,8 @@ public class TamaGameGraphique extends Application {
         try (OutputStream out = new FileOutputStream(this.propertiesFileLocation)) {
             this.updateProperties(3, 10, "fr_FR");
             this.getProps().store(out, "TamaGameGraphique config file");
-        } catch (IOException e2) {
-            e2.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -87,15 +113,15 @@ public class TamaGameGraphique extends Application {
             this.getProps().setProperty("lifeTime", String.valueOf(lifeTime));
             this.getProps().setProperty("language", language);
             this.getProps().store(out, "TamaGameGraphique config file");
-        } catch (IOException e2) {
-            e2.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
     /**
      * Initialise le jeu avec les méthodes précédentes.
      */
-    private void initialisation() throws NegativeLifeTimeException {
+    private void initialisation() {
         messages = ResourceBundle.getBundle("MessageBundle", new Locale(this.getProps().getProperty("language")));
         this.initLifeTime();
         this.initTamagoshis();
@@ -104,7 +130,7 @@ public class TamaGameGraphique extends Application {
     /**
      * Lance le jeu.
      */
-    public void play(Stage stage) throws NegativeLifeTimeException {
+    public void play(Stage stage) {
         this.getProperties();
 
         this.stage = stage;
@@ -163,8 +189,8 @@ public class TamaGameGraphique extends Application {
 
     /**
      * Calcule le score et le retourne.
-     * Il est égal à ((âge des tamagoshis en vie * 100) / âge total de tous les tamagoshis)
-     * @return {int} = score calculé
+     * Il est égal à ((âge des tamagoshis en vie * 100) / âge total de tous les tamagoshis).
+     * @return Le score calculé ({@link Integer}).
      */
     private int score() {
         int maxAge = Tamagoshi.getLifeTime() * this.getListeTamagoshisDepart().size();
@@ -207,29 +233,33 @@ public class TamaGameGraphique extends Application {
         this.log(messages.getString("finalScore") + " : " + this.score() + "%", 15, Color.BLACK);
     }
 
+    /**
+     * Génère la barre de menu avec la possibilité de lancer une nouvelle partie, de changer les paramètres, obtenir des informations sur le jeu et bien d'autres...
+     * @return La barre de menu générée.
+     */
     private MenuBar generateMenuBar() {
+        // Menu "Jeu"
         Menu gameMenu = new Menu(messages.getString("game"));
         MenuItem newGameItem = new MenuItem(messages.getString("newGame"));
         newGameItem.setOnAction(actionEvent -> {
-            try {
-                this.restart(this.getStage());
-            } catch (NegativeLifeTimeException e) {
-                e.printStackTrace();
-            }
+            this.restart(this.getStage());
         });
         gameMenu.getItems().addAll(newGameItem);
 
+        // Menu "Options"
         Menu optionsMenu = new Menu(messages.getString("settings"));
         MenuItem optionsItem = new MenuItem(messages.getString("settings"));
         optionsItem.setOnAction(actionEvent -> this.displayOptions());
         optionsMenu.getItems().addAll(optionsItem);
 
+        // Menu "Aide"
         Menu helpMenu = new Menu(messages.getString("help"));
         MenuItem aboutItem = new MenuItem(messages.getString("informations"));
         aboutItem.setOnAction(actionEvent -> this.displayInformations());
         MenuItem helpItem = new MenuItem(messages.getString("help"));
         helpMenu.getItems().addAll(aboutItem, helpItem);
 
+        // Assemblage du menu
         MenuBar menuBar = new MenuBar();
         menuBar.getMenus().addAll(gameMenu, optionsMenu, helpMenu);
         return menuBar;
@@ -338,7 +368,7 @@ public class TamaGameGraphique extends Application {
     }
 
     /**
-     * Initialise les tamagoshis du jeu.
+     * Initialise les tamagoshis du jeu avec une fabrique (voir {@link FabriqueTamagoshi}).
      */
     private void initTamagoshis() {
         FabriqueTamagoshi fabriqueTamagoshi = FabriqueTamagoshi.getInstance();
@@ -362,13 +392,19 @@ public class TamaGameGraphique extends Application {
     }
 
     /**
-     * Initialise la durée de vie des Tamagoshis (durée de la partie)
-     * @throws NegativeLifeTimeException Si durée de vie négative
+     * Initialise la durée de vie des Tamagoshis (durée de la partie).
      */
-    private void initLifeTime() throws NegativeLifeTimeException {
-        Tamagoshi.setLifeTime(Integer.parseInt(this.getProps().getProperty("lifeTime")));
+    private void initLifeTime() {
+        try {
+            Tamagoshi.setLifeTime(Integer.parseInt(this.getProps().getProperty("lifeTime")));
+        } catch (NegativeLifeTimeException e) {
+            logger.severe(messages.getString("lifeTimeExceptionMessage"));
+        }
     }
 
+    /**
+     * Réactive les boutons des tamagoshis sur leur {@link TamaStage}
+     */
     private void activerBoutons() {
         this.setPeutNourrir(true);
         this.setPeutJouer(true);
@@ -380,17 +416,32 @@ public class TamaGameGraphique extends Application {
         }
     }
 
+    /**
+     * Affiche un message dans la console (voir {@link TamaGameGraphique#console}).
+     * @param message Le message à afficher (peut être vide).
+     */
     protected void log(String message) {
         Text text = new Text(message + "\n");
         this.log(text);
     }
 
+    /**
+     * Affiche un message dans la console (voir {@link TamaGameGraphique#console}).
+     * @param message Le message à afficher (peut être vide).
+     * @param taillePolice La taille du message.
+     */
     protected void log(String message, int taillePolice) {
         Text text = new Text(message + "\n");
         text.setFont(new Font(taillePolice));
         this.log(text);
     }
 
+    /**
+     * Affiche un message dans la console (voir {@link TamaGameGraphique#console}).
+     * @param message Le message à afficher (peut être vide).
+     * @param taillePolice La taille du message.
+     * @param couleur La couleur du message.
+     */
     protected void log(String message, int taillePolice, Color couleur) {
         Text text = new Text(message + "\n");
         text.setFont(new Font(taillePolice));
@@ -398,6 +449,10 @@ public class TamaGameGraphique extends Application {
         this.log(text);
     }
 
+    /**
+     * Ajoute le texte (voir {@link javafx.scene.text.Text}) à la console (voir {@link TamaGameGraphique#console}).
+     * @param text Texte ajouté à la console.
+     */
     protected void log(Text text) {
         this.getConsole().getChildren().add(text);
     }
@@ -454,9 +509,5 @@ public class TamaGameGraphique extends Application {
 
     private Properties getProps() {
         return props;
-    }
-
-    private ArrayList<String> getNames() {
-        return names;
     }
 }

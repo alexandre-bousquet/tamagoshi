@@ -59,7 +59,7 @@ public class TamaGame {
     }
 
     /**
-     * Exception générée lorsque la saisie clavier != Integer || <= 0 || > 5 (voir méthode { @link TamaGame#setNbTamagoshis(int) }).
+     * Exception générée lorsque la saisie clavier != Integer || <= 0 || > 5 (voir méthode {@link TamaGame#setNbTamagoshis(int)}).
      * Initialise les tamagoshis du jeu.
      */
     private void initTamagoshis() {

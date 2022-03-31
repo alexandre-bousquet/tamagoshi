@@ -74,6 +74,7 @@ public abstract class Tamagoshi {
 
     /**
      * Remonte le fun du tamagoshi.
+     * @return Le message de status du tamagoshi.
      */
     public String joue() {
         if (this.getFun() < this.getMaxFun()) {
@@ -90,7 +91,7 @@ public abstract class Tamagoshi {
 
     /**
      * Baisse l'énergie du tamagoshi.
-     * @return boolean
+     * @return Faux s'il est mort.
      */
     public boolean consommeEnergy() {
         this.energy--;
@@ -104,7 +105,7 @@ public abstract class Tamagoshi {
 
     /**
      * Baisse le fun du tamagoshi.
-     * @return boolean
+     * @return Faux s'il est mort.
      */
     public boolean consommeFun() {
         this.fun--;
@@ -118,7 +119,7 @@ public abstract class Tamagoshi {
 
     /**
      * @deprecated car deux autres fonctions font son travail.
-     * @return boolean
+     * @return Faux s'il est mort.
      */
     @Deprecated
     public boolean consommeRessources() {
@@ -143,6 +144,10 @@ public abstract class Tamagoshi {
         return this.getAge() < getLifeTime();
     }
 
+    /**
+     * Vérifie si le tamagoshi est encore en vie ou non.
+     * @return Vrai si son énergie et sont fun son tous les deux >= 0.
+     */
     public boolean isAlive() {
         return this.getEnergy() >= 0 && this.getFun() >= 0;
     }

@@ -11,11 +11,31 @@ import java.util.Objects;
 import static tamagoshi.jeu.TamaGame.messages;
 
 public class TamaStage extends Stage {
+    /**
+     * {@link TamaGameGraphique} auquel appartient le {@link TamaStage}
+     */
     private final TamaGameGraphique tamaGameGraphique;
+
+    /**
+     * {@link TamaPane} contenant un {@link tamagoshi.tamagoshis.Tamagoshi} aléatoire généré par une fabrique.
+     */
     private final TamaPane tamaPane;
+
+    /**
+     * Bouton permettant de nourrir le {@link tamagoshi.tamagoshis.Tamagoshi} de {@link TamaStage#tamaPane}.
+     */
     private Button boutonNourrir;
+
+    /**
+     * Bouton permettant de jouer avec le {@link tamagoshi.tamagoshis.Tamagoshi} de {@link TamaStage#tamaPane}.
+     */
     private Button boutonJouer;
 
+    /**
+     * Constructeur de la classe {@link TamaStage}.
+     * @param tamaPane {@link TamaPane} contenant un {@link tamagoshi.tamagoshis.Tamagoshi} aléatoire généré par une fabrique
+     * @param tamaGameGraphique {@link TamaGameGraphique} auquel appartient le {@link TamaStage}
+     */
     public TamaStage(TamaPane tamaPane, TamaGameGraphique tamaGameGraphique) {
         this.tamaGameGraphique = tamaGameGraphique;
         this.tamaPane = tamaPane;
@@ -31,6 +51,9 @@ public class TamaStage extends Stage {
         this.show();
     }
 
+    /**
+     * Initialise les boutons pour nourrir et jouer avec le tamagoshi.
+     */
     private void initBoutons() {
         this.boutonNourrir = new Button(messages.getString("feed"));
         this.boutonNourrir.getStyleClass().add("customButton");
@@ -44,6 +67,9 @@ public class TamaStage extends Stage {
         this.boutonJouer.setOnAction(actionEvent -> this.jouer());
     }
 
+    /**
+     * Nourri le tamagoshi du TamaPane (voir {@link TamaPane#getTamagoshi()}) et affiche dans la console qu'on la nourrit.
+     */
     private void nourrir() {
         this.getTamaPane().manger();
         for (TamaStage tamaStage : this.getTamaGameGraphique().getListeTamaStage()) {
@@ -54,6 +80,9 @@ public class TamaStage extends Stage {
         this.getTamaGameGraphique().prepareNextCycle();
     }
 
+    /**
+     * Joue avec le tamagoshi du TamaPane (voir {@link TamaPane#getTamagoshi()}) et affiche dans la console qu'on a joué avec lui.
+     */
     private void jouer() {
         this.getTamaPane().jouer();
         for (TamaStage tamaStage : this.getTamaGameGraphique().getListeTamaStage()) {
@@ -64,18 +93,30 @@ public class TamaStage extends Stage {
         this.getTamaGameGraphique().prepareNextCycle();
     }
 
+    /**
+     * Désactive le bouton {@link TamaStage#boutonNourrir}.
+     */
     private void desactiverBoutonNourrir() {
         this.getBoutonNourrir().setDisable(true);
     }
 
+    /**
+     * Active le bouton {@link TamaStage#boutonNourrir}.
+     */
     protected void activerBoutonNourrir() {
         this.getBoutonNourrir().setDisable(false);
     }
 
+    /**
+     * Désactive le bouton {@link TamaStage#boutonJouer}.
+     */
     private void desactiverBoutonJouer() {
         this.getBoutonJouer().setDisable(true);
     }
 
+    /**
+     * Active le bouton {@link TamaStage#boutonJouer}.
+     */
     protected void activerBoutonJouer() {
         this.getBoutonJouer().setDisable(false);
     }
