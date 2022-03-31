@@ -12,66 +12,58 @@ import java.util.logging.*;
  * Classe de jeu.
  */
 public class TamaGame {
+    /**
+     * Nombre de tamagoshis dans la partie.
+     */
     private int nbTamagoshis;
 
     /**
      * Liste des tamagoshis créer au départ du jeu.
      */
-    private ArrayList<Tamagoshi> listeTamagoshisDepart;
+    private List<Tamagoshi> listeTamagoshisDepart;
 
     /**
      * Liste des tamagoshis vivants à l'instant T.
      */
-    private ArrayList<Tamagoshi> listeTamagoshisEnCours;
+    private List<Tamagoshi> listeTamagoshisEnCours;
 
     /**
      * Liste des noms possibles pour les tamagoshis.
      */
-    private ArrayList<String> names = new ArrayList<>();
+    private List<String> names = new ArrayList<>();
 
+    /**
+     * Langage courant de l'ordinateur qui exécute le programme.
+     */
     private static final Locale languageCourant = Locale.getDefault();
+
+    /**
+     * Messages dans la langue du langage courant.
+     */
     public static ResourceBundle messages = ResourceBundle.getBundle("MessageBundle", languageCourant);
-    //public static ResourceBundle messages = ResourceBundle.getBundle("MessageBundle", Locale.US);
+
+    /**
+     * Root logger pour faire des logs.
+     */
     public static Logger logger = Logger.getLogger("");
 
+    /**
+     * Constructeur de TamaGame
+     */
     public TamaGame() {
         logger.setLevel(Level.ALL);
         StreamHandler handler = new StreamHandler();
-        /*ConsoleHandler handler = new ConsoleHandler();
-        handler.setFormatter(new SimpleFormatter() {
-            private static final String format = "%3$s %n";
-
-            @Override
-            public synchronized String format(LogRecord lr) {
-                return String.format(format,
-                        lr.getMessage()
-                );
-            }
-        });
-        logger.addHandler(handler);*/
         logger.addHandler(handler);
         this.listeTamagoshisDepart = new ArrayList<>();
         this.listeTamagoshisEnCours = new ArrayList<>();
     }
 
     /**
-     * Initialise la liste des noms possibles pour les tamagoshis.
-     */
-    private void initNamesList() {
-        Scanner scan = new Scanner(Objects.requireNonNull(TamaGame.class.getResourceAsStream("/tamagoshi/names.txt")));
-        while (scan.hasNextLine()) {
-            String nom = scan.nextLine();
-            names.add(nom);
-        }
-        scan.close();
-        Collections.shuffle(names);
-    }
-
-    /**
-     * Exception générée lorsque la saisie clavier != Integer || <= 0 || > 5 (voir méthode { @link TamaGame#setNbTamagoshis(int) })
+     * Exception générée lorsque la saisie clavier != Integer || <= 0 || > 5 (voir méthode { @link TamaGame#setNbTamagoshis(int) }).
      * Initialise les tamagoshis du jeu.
      */
     private void initTamagoshis() {
+        FabriqueTamagoshi fabriqueTamagoshi = FabriqueTamagoshi.getInstance();
         System.out.println(messages.getString("askingHowManyTamagoshiToPlayWith"));
         while (true) {
             try {
@@ -82,30 +74,15 @@ public class TamaGame {
             }
         }
         for (int i = 0; i < this.getNbTamagoshis(); i++) {
-            double rand = Math.random();
-            int indexName = new Random().nextInt(this.names.size());
-            String name = this.names.get(indexName);
-            this.names.remove(indexName);
-            Tamagoshi t;
-            if (rand <= 0.40) {
-                t = new GrosJoueur(name);
-            } else if (rand <= 0.8) {
-                t = new GrosMangeur(name);
-            } else if (rand <= 0.9) {
-                t = new Cachotier(name);
-            } else if (rand <= 0.95) {
-                t = new Bipolaire(name);
-            } else {
-                t = new Suicidaire(name);
-            }
+            Tamagoshi t = fabriqueTamagoshi.generateRandomTamagoshi();
             this.listeTamagoshisDepart.add(t);
             this.listeTamagoshisEnCours.add(t);
         }
     }
 
     /**
-     * Exception générée lorsque la saisie clavier != Integer || <= 0 (voir méthode { @link Tamagoshi#setLifeTime(int) })
-     * Initialise la durée de vie des tamagoshis
+     * Exception générée lorsque la saisie clavier != Integer || <= 0 (voir méthode {@link Tamagoshi#setLifeTime(int)}).
+     * Initialise la durée de vie des tamagoshis.
      */
     private void initLifeTime() {
         System.out.println(messages.getString("askingLifeTime"));
@@ -123,7 +100,6 @@ public class TamaGame {
      * Initialise le jeu avec les méthodes précédentes.
      */
     private void initialisation() {
-        this.initNamesList();
         this.initTamagoshis();
         this.initLifeTime();
     }
@@ -142,6 +118,7 @@ public class TamaGame {
             System.out.println("------------ " + messages.getString("cycle")+ " n°" + cycle + " ------------");
             for (Tamagoshi t : this.listeTamagoshisEnCours) {
                 t.parler();
+                System.out.println(t.getName() + " : " + t.getMessage());
             }
             this.nourrir();
             this.jouer();
@@ -162,7 +139,9 @@ public class TamaGame {
      */
     private void nourrir() {
         System.out.println(messages.getString("whichTamagoshiToFeed"));
-        this.getTamagoshiAction().mange();
+        Tamagoshi tamagoshi = this.getTamagoshiAction();
+        tamagoshi.mange();
+        System.out.println(tamagoshi.getName() + " : " + tamagoshi.getMessage());
     }
 
     /**
@@ -170,7 +149,9 @@ public class TamaGame {
      */
     private void jouer() {
         System.out.println(messages.getString("whichTamagoshiToPlayWith"));
-        this.getTamagoshiAction().joue();
+        Tamagoshi tamagoshi = this.getTamagoshiAction();
+        tamagoshi.joue();
+        System.out.println(tamagoshi.getName() + " : " + tamagoshi.getMessage());
     }
 
     /**
@@ -223,6 +204,7 @@ public class TamaGame {
         for (Tamagoshi t : this.listeTamagoshisDepart) {
             StringBuilder str = new StringBuilder()
                     .append(t.getName())
+                    .append(" ")
                     .append(messages.getString("whoWasA"))
                     .append(" ")
                     .append(t.getClass().getSimpleName())

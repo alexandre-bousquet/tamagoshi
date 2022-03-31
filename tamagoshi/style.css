@@ -1,0 +1,47 @@
+.label {
+    -fx-font-weight: bold;
+    -fx-text-alignment: center !important;
+    -fx-font-size: 20;
+    -fx-label-padding: 10 20 10 20;
+    -fx-max-width: 400;
+}
+
+.message {
+    -fx-font-weight: bold;
+    -fx-text-alignment: center;
+    -fx-font-size: 15;
+    -fx-label-padding: 20;
+    -fx-max-width: 400;
+}
+
+.messageRed {
+    -fx-text-fill: red;
+    -fx-font-size: 10;
+}
+
+.customButton {
+    -fx-font-weight: bold;
+    -fx-font-size: 20;
+    -fx-min-width: 100;
+    -fx-background-radius: 10;
+    -fx-background-insets: 0, 1,1 ;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 3, 0.0 , 0 , 1 );
+}
+
+.customImageView {
+    -fx-border-style: solid;
+    -fx-border-color: black;
+    -fx-border-width: 5;
+}
+
+.borderTop {
+    -fx-border-style: solid;
+    -fx-border-color: black;
+    -fx-border-width: 2 0 0 0;
+}
+
+.borderBottom {
+    -fx-border-style: solid;
+    -fx-border-color: black;
+    -fx-border-width: 0 0 2 0;
+}

@@ -8,23 +8,24 @@ import java.util.Random;
 /**
  * Tamagoshi lambda.
  */
-public class Tamagoshi {
+public abstract class Tamagoshi {
     /**
-     * Ege du tamagoshi.
+     * Age du tamagoshi.
      */
     private int age;
     /**
      * Energie maximale d'un tamagoshi.
      */
-    private int maxEnergy;
+    private final int maxEnergy;
     /**
      * Energie du tamagoshi (ne peut être supérieure à maxEnergy).
      */
     private int energy;
-    private String name;
+    private final String name;
     private static int lifeTime;
     private int fun;
-    private int maxFun;
+    private final int maxFun;
+    private String message;
 
     public Tamagoshi(String name) {
         this.age = 0;
@@ -43,58 +44,48 @@ public class Tamagoshi {
 
     /**
      * Le tamagoshi exprime dans quel état il est.
-     * @return boolean
      */
-    public boolean parler() {
+    public void parler() {
         if (this.getEnergy() > 4 && this.getFun() > 4) {
-            System.out.println(this.getName() + " : " + TamaGame.messages.getString("everythingIsFine"));
-            return true;
+            this.setMessage(TamaGame.messages.getString("everythingIsFine"));
         } else if (this.getEnergy() <= 4 && this.getFun() > 4) {
-            System.out.println(this.getName() + " : " + TamaGame.messages.getString("imHungry"));
-            return false;
+            this.setMessage(TamaGame.messages.getString("imHungry"));
         } else if (this.getEnergy() > 4 && this.getFun() <= 4) {
-            System.out.println(this.getName() + " : " + TamaGame.messages.getString("imBored"));
-            return false;
+            this.setMessage(TamaGame.messages.getString("imBored"));
         } else {
-            System.out.println(this.getName() + " : " + TamaGame.messages.getString("imHungryAndBored"));
-            return false;
+            this.setMessage(TamaGame.messages.getString("imHungryAndBored"));
         }
     }
 
     /**
      * Remonte l'énergie du tamagoshi.
-     * @return boolean
      */
-    public boolean mange() {
+    public void mange() {
         if (this.getEnergy() < this.getMaxEnergy()) {
-            this.setEnergy(this.getEnergy() + (new Random().nextInt(3) + 1));
+            this.setEnergy(this.getEnergy() + (new Random().nextInt(4) + 2));
             if (this.getEnergy() > this.getMaxEnergy()) {
                 this.setEnergy(this.getMaxEnergy());
             }
-            System.out.println(this.getName() + " : " + TamaGame.messages.getString("thanksIWasHungry"));
-            return true;
+            this.setMessage(TamaGame.messages.getString("thanksIWasHungry"));
         } else {
-            System.out.println(this.getName() + " : " + TamaGame.messages.getString("imNotHungry"));
-            return false;
+            this.setMessage(TamaGame.messages.getString("imNotHungry"));
         }
     }
 
     /**
      * Remonte le fun du tamagoshi.
-     * @return boolean
      */
-    public boolean joue() {
+    public String joue() {
         if (this.getFun() < this.getMaxFun()) {
-            this.setFun(this.getFun() + (new Random().nextInt(3) + 1));
+            this.setFun(this.getFun() + (new Random().nextInt(4) + 2));
             if (this.getFun() > this.getMaxFun()) {
                 this.setFun(this.getMaxFun());
             }
-            System.out.println(this.getName() + " : " + TamaGame.messages.getString("thanksIWasBored"));
-            return true;
+            this.setMessage(TamaGame.messages.getString("thanksIWasBored"));
         } else {
-            System.out.println(this.getName() + " : " + TamaGame.messages.getString("imNotBored"));
-            return false;
+            this.setMessage(TamaGame.messages.getString("imNotBored"));
         }
+        return this.getMessage();
     }
 
     /**
@@ -104,7 +95,7 @@ public class Tamagoshi {
     public boolean consommeEnergy() {
         this.energy--;
         if (this.getEnergy() <= 0) {
-            System.out.println(this.getName() + " : " + TamaGame.messages.getString("dieEmptyEnergy"));
+            this.setMessage(TamaGame.messages.getString("dieEmptyEnergy"));
             return false;
         } else {
             return true;
@@ -118,7 +109,7 @@ public class Tamagoshi {
     public boolean consommeFun() {
         this.fun--;
         if (this.getFun() <= 0) {
-            System.out.println(this.getName() + " : " + TamaGame.messages.getString("dieEmptyFun"));
+            this.setMessage(TamaGame.messages.getString("dieEmptyFun"));
             return false;
         } else {
             return true;
@@ -136,7 +127,7 @@ public class Tamagoshi {
         if (this.getEnergy() <= 0) {
             System.out.println(this.getName() + " : Arrrrrggh !");
             return false;
-        } else if (this.fun <= 0) {
+        } else if (this.getFun() <= 0) {
             System.out.println(this.getName() + " : Je fais une dépression, ciao !");
             return false;
         } else {
@@ -147,8 +138,13 @@ public class Tamagoshi {
     /**
      * Augmente l'âge du tamagoshi.
      */
-    public void vieillir() {
+    public boolean vieillir() {
         this.age++;
+        return this.getAge() < getLifeTime();
+    }
+
+    public boolean isAlive() {
+        return this.getEnergy() >= 0 && this.getFun() >= 0;
     }
 
     // Getters & Setters
@@ -183,6 +179,14 @@ public class Tamagoshi {
 
     public String getName() {
         return name;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public static void setLifeTime(int lifeTime) throws NegativeLifeTimeException {

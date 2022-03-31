@@ -11,16 +11,7 @@ public class Cachotier extends Tamagoshi {
     }
 
     @Override
-    public boolean parler() {
-        System.out.println(this.getName() + " : " + TamaGame.messages.getString("secretiveTalk"));
-        if (this.getEnergy() > 4 && this.getFun() > 4) {
-            return true;
-        } else if (this.getEnergy() <= 4 && this.getFun() > 4) {
-            return false;
-        } else if (this.getEnergy() > 4 && this.getFun() <= 4) {
-            return false;
-        } else {
-            return false;
-        }
+    public void parler() {
+        this.setMessage(TamaGame.messages.getString("secretiveTalk"));
     }
 }

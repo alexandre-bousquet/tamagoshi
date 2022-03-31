@@ -17,9 +17,9 @@ public class Bipolaire extends Tamagoshi {
     }
 
     @Override
-    public boolean parler() {
+    public void parler() {
         this.generateHumor();
-        return super.parler();
+        super.parler();
     }
 
     @Override
