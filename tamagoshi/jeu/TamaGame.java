@@ -63,8 +63,8 @@ public class TamaGame {
      * Initialise les tamagoshis du jeu.
      */
     private void initTamagoshis() {
+        FabriqueTamagoshi fabriqueTamagoshi = FabriqueTamagoshi.getInstance();
         System.out.println(messages.getString("askingHowManyTamagoshiToPlayWith"));
-        FabriqueTamagoshi.getInstance();
         while (true) {
             try {
                 this.setNbTamagoshis(Integer.parseInt(User.saisieClavier()));
@@ -74,7 +74,7 @@ public class TamaGame {
             }
         }
         for (int i = 0; i < this.getNbTamagoshis(); i++) {
-            Tamagoshi t = FabriqueTamagoshi.generateRandomTamagoshi();
+            Tamagoshi t = fabriqueTamagoshi.generateRandomTamagoshi();
             this.listeTamagoshisDepart.add(t);
             this.listeTamagoshisEnCours.add(t);
         }

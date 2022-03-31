@@ -331,12 +331,12 @@ public class TamaGameGraphique extends Application {
      * Initialise les tamagoshis du jeu.
      */
     private void initTamagoshis() {
-        FabriqueTamagoshi.getInstance();
+        FabriqueTamagoshi fabriqueTamagoshi = FabriqueTamagoshi.getInstance();
         double screenSize = Screen.getPrimary().getBounds().getWidth();
         double x = 0;
         double y = 0;
         for (int i = 0; i < Integer.parseInt(this.getProps().getProperty("difficulty")); i++) {
-            Tamagoshi tamagoshi = FabriqueTamagoshi.generateRandomTamagoshi();
+            Tamagoshi tamagoshi = fabriqueTamagoshi.generateRandomTamagoshi();
             TamaStage tamaStage = new TamaStage(new TamaPane(tamagoshi), this);
             tamaStage.setX(x);
             tamaStage.setY(y);

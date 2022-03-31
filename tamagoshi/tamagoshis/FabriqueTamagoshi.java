@@ -44,7 +44,7 @@ public class FabriqueTamagoshi {
      * Génère un tamagoshi aléatoire avec un nom aléatoire en fonction de probabilités établies par le programmeur.
      * @return Le tamagoshi généré.
      */
-    public static Tamagoshi generateRandomTamagoshi() {
+    public Tamagoshi generateRandomTamagoshi() {
         double rand = Math.random();
         int indexName = new Random().nextInt(instance.listeNomTamagoshi.size());
         String name = instance.listeNomTamagoshi.get(indexName);
