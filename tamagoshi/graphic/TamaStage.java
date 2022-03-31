@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import java.util.Objects;
 
@@ -48,7 +49,7 @@ public class TamaStage extends Stage {
         for (TamaStage tamaStage : this.getTamaGameGraphique().getListeTamaStage()) {
             tamaStage.desactiverBoutonNourrir();
         }
-        this.getTamaGameGraphique().log(messages.getString("youFed") + " " + this.getTamaPane().getTamagoshi().getName());
+        this.getTamaGameGraphique().log(messages.getString("youFed") + " " + this.getTamaPane().getTamagoshi().getName(), 15, Color.BLACK);
         this.getTamaGameGraphique().setPeutNourrir(false);
         this.getTamaGameGraphique().prepareNextCycle();
     }
@@ -58,7 +59,7 @@ public class TamaStage extends Stage {
         for (TamaStage tamaStage : this.getTamaGameGraphique().getListeTamaStage()) {
             tamaStage.desactiverBoutonJouer();
         }
-        this.getTamaGameGraphique().log(messages.getString("youPlayedWith") + " " + this.getTamaPane().getTamagoshi().getName());
+        this.getTamaGameGraphique().log(messages.getString("youPlayedWith") + " " + this.getTamaPane().getTamagoshi().getName(), 15, Color.BLACK);
         this.getTamaGameGraphique().setPeutJouer(false);
         this.getTamaGameGraphique().prepareNextCycle();
     }

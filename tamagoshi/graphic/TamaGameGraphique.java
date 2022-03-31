@@ -2,10 +2,12 @@ package tamagoshi.graphic;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -110,17 +112,20 @@ public class TamaGameGraphique extends Application {
         this.listeTamagoshisEnCours = new ArrayList<>();
         this.listeTamaStage = new ArrayList<>();
         this.console = new TextFlow();
-        Text logTitle = new Text("[Logs]");
-        //logTitle.getStyleClass().add("message");
-        logTitle.setFont(new Font(25));
-        this.console.getChildren().add(logTitle);
+        this.log("[Logs]", 25);
+        this.log("");
         this.cycle = 0;
         this.initialisation();
 
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setVvalue(1);
+        scrollPane.setContent(this.console);
+        scrollPane.setPadding(new Insets(10));
+        scrollPane.vvalueProperty().bind(this.console.heightProperty());
         BorderPane root = new BorderPane();
         root.setTop(this.generateMenuBar());
-        root.setCenter(this.getConsole());
-        Scene scene = new Scene(root, 500, 500);
+        root.setCenter(scrollPane);
+        Scene scene = new Scene(root, 600, 600);
         //scene.getStylesheets().add(Objects.requireNonNull(this.getClass().getResource("/tamagoshi/style.css")).toExternalForm());
 
         this.stage.setOnCloseRequest(ev -> Platform.exit());
@@ -135,6 +140,7 @@ public class TamaGameGraphique extends Application {
     protected void prepareNextCycle() {
         if (!this.isPeutNourrir() && !this.isPeutJouer()) {
             this.getListeTamagoshisEnCours().removeIf(t -> !t.consommeEnergy() || !t.consommeFun() || !t.vieillir());
+            this.log("");
             this.nextCycle();
         }
     }
@@ -143,7 +149,7 @@ public class TamaGameGraphique extends Application {
         if (this.getCycle() < Tamagoshi.getLifeTime() && !this.getListeTamagoshisEnCours().isEmpty()) {
             this.activerBoutons();
             this.incrementCycle();
-            this.log("[" + messages.getString("cycle")+ " n°" + this.getCycle() + "]");
+            this.log("[" + messages.getString("cycle")+ " n°" + this.getCycle() + "]", 20, Color.BLACK);
             for (Tamagoshi tamagoshi : this.getListeTamagoshisEnCours()) {
                 tamagoshi.parler();
             }
@@ -173,8 +179,10 @@ public class TamaGameGraphique extends Application {
      * Affiche le score, la difficulté et l'état de chaque tamagoshi à la fin de la partie.
      */
     private void resultat() {
-        this.log("------------- " + messages.getString("endOfTheGame") + " ------------");
-        this.log("------------ " + messages.getString("result") + " -------------");
+        this.log("[" + messages.getString("endOfTheGame") + "]", 20, Color.BLACK);
+        this.log("");
+        this.log("[" + messages.getString("result") + "]", 20, Color.BLACK);
+        Color couleur;
         for (Tamagoshi t : this.getListeTamagoshisDepart()) {
             StringBuilder str = new StringBuilder()
                     .append(t.getName())
@@ -185,16 +193,18 @@ public class TamaGameGraphique extends Application {
                     .append(" ");
             if (t.getAge() >= Tamagoshi.getLifeTime()) {
                 str.append(messages.getString("hasSurvived"));
+                couleur = Color.GREEN;
             } else {
                 str.append(messages.getString("hasNotSurvived"));
+                couleur = Color.RED;
             }
-            this.log(String.valueOf(str));
+            this.log(String.valueOf(str), 15, couleur);
         }
         for (TamaStage tamaStage : this.getListeTamaStage()) {
             tamaStage.getTamaPane().updatePhase();
         }
-        this.log(messages.getString("difficultyLevel") + " : " + this.getListeTamagoshisDepart().size());
-        this.log(messages.getString("finalScore") + " : " + this.score() + "%");
+        this.log(messages.getString("difficultyLevel") + " : " + this.getListeTamagoshisDepart().size(), 15, Color.BLACK);
+        this.log(messages.getString("finalScore") + " : " + this.score() + "%", 15, Color.BLACK);
     }
 
     private MenuBar generateMenuBar() {
@@ -371,8 +381,24 @@ public class TamaGameGraphique extends Application {
     }
 
     protected void log(String message) {
-        Text text = new Text("\n" + message);
-        text.setFont(new Font(15));
+        Text text = new Text(message + "\n");
+        this.log(text);
+    }
+
+    protected void log(String message, int taillePolice) {
+        Text text = new Text(message + "\n");
+        text.setFont(new Font(taillePolice));
+        this.log(text);
+    }
+
+    protected void log(String message, int taillePolice, Color couleur) {
+        Text text = new Text(message + "\n");
+        text.setFont(new Font(taillePolice));
+        text.setFill(couleur);
+        this.log(text);
+    }
+
+    protected void log(Text text) {
         this.getConsole().getChildren().add(text);
     }
 
