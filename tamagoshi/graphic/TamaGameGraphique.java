@@ -147,16 +147,15 @@ public class TamaGameGraphique extends Application {
         this.getProperties();
 
         // Configuration des variables
-        this.stage = stage;
         this.listeTamagoshisDepart = new ArrayList<>();
         this.listeTamagoshisEnCours = new ArrayList<>();
         this.listeTamaStage = new ArrayList<>();
-        this.console = new TextFlow();
         this.cycle = 0;
 
         // Configuration de la console
-        this.log("[Logs]", 25);
-        this.log("");
+        this.initConsole();
+
+        // Configuration du jeu
         this.initialisation();
 
         // Configuration de la fenêtre
@@ -171,6 +170,7 @@ public class TamaGameGraphique extends Application {
         Scene scene = new Scene(root, 600, 600);
 
         // Configuration du stage
+        this.stage = stage;
         this.stage.setOnCloseRequest(ev -> Platform.exit());
         this.stage.setTitle("TamaGame");
         this.stage.setResizable(false);
@@ -179,6 +179,12 @@ public class TamaGameGraphique extends Application {
 
         // Lancement des cycles
         this.nextCycle();
+    }
+
+    private void initConsole() {
+        this.console = new TextFlow();
+        this.log("[Logs]", 25);
+        this.log("");
     }
 
     /**
