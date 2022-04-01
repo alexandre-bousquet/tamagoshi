@@ -74,14 +74,13 @@ public class TamaGameGraphique extends Application {
     private List<TamaStage> listeTamaStage;
 
     @Override
-    public void start(Stage stage) throws NegativeLifeTimeException {
+    public void start(Stage stage) {
         this.play(stage);
     }
 
     /**
      * Permet de relancer le jeu.
      * @param stage {@link TamaGameGraphique#stage}
-     * @throws NegativeLifeTimeException Si
      */
     private void restart(Stage stage) {
         for (TamaStage t : this.getListeTamaStage()) {
@@ -90,14 +89,20 @@ public class TamaGameGraphique extends Application {
         this.play(stage);
     }
 
+    /**
+     * Récupère les propriétés du jeu dans le fichier de configuration. Crée les propriétés s'il ne les trouve pas avec {@link TamaGameGraphique#createProperties()}.
+     */
     private void getProperties() {
         try (InputStream in = new FileInputStream(this.propertiesFileLocation)) {
             this.getProps().load(in);
-        } catch (IOException e1) {
+        } catch (IOException e) {
             this.createProperties();
         }
     }
 
+    /**
+     * Crée les propriétés du jeu avec les valeurs par défaut (difficulté = 3, lifetime = 10, langue = "fr_FR").
+     */
     private void createProperties() {
         try (OutputStream out = new FileOutputStream(this.propertiesFileLocation)) {
             this.updateProperties(3, 10, "fr_FR");
@@ -107,6 +112,12 @@ public class TamaGameGraphique extends Application {
         }
     }
 
+    /**
+     * Met à jour les propriétés du jeu avec les éléments en paramètre.
+     * @param difficulty Nombre de tamagoshis.
+     * @param lifeTime Durée de la partie (durée de vie des tamagoshis).
+     * @param language Langue du jeu (FR ou EN).
+     */
     private void updateProperties(int difficulty, int lifeTime, String language) {
         try (OutputStream out = new FileOutputStream(this.propertiesFileLocation)) {
             this.getProps().setProperty("difficulty", String.valueOf(difficulty));
@@ -128,21 +139,27 @@ public class TamaGameGraphique extends Application {
     }
 
     /**
-     * Lance le jeu.
+     * Paramètre la fenêtre du jeu et le lance.
+     * @param stage {@link javafx.stage.Stage} passé par {@link TamaGameGraphique#start(Stage)}.
      */
     public void play(Stage stage) {
+        // Récupération des propriétés
         this.getProperties();
 
+        // Configuration des variables
         this.stage = stage;
         this.listeTamagoshisDepart = new ArrayList<>();
         this.listeTamagoshisEnCours = new ArrayList<>();
         this.listeTamaStage = new ArrayList<>();
         this.console = new TextFlow();
+        this.cycle = 0;
+
+        // Configuration de la console
         this.log("[Logs]", 25);
         this.log("");
-        this.cycle = 0;
         this.initialisation();
 
+        // Configuration de la fenêtre
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setVvalue(1);
         scrollPane.setContent(this.console);
@@ -152,38 +169,45 @@ public class TamaGameGraphique extends Application {
         root.setTop(this.generateMenuBar());
         root.setCenter(scrollPane);
         Scene scene = new Scene(root, 600, 600);
-        //scene.getStylesheets().add(Objects.requireNonNull(this.getClass().getResource("/tamagoshi/style.css")).toExternalForm());
 
+        // Configuration du stage
         this.stage.setOnCloseRequest(ev -> Platform.exit());
         this.stage.setTitle("TamaGame");
         this.stage.setResizable(false);
         this.stage.setScene(scene);
         this.stage.show();
 
+        // Lancement des cycles
         this.nextCycle();
     }
 
+    /**
+     * Vérifie si on peut passer au cycle suivant si on a nourri et jouer avec un tamagoshi et lance {@link TamaGameGraphique#nextCycle()}.
+     */
     protected void prepareNextCycle() {
         if (!this.isPeutNourrir() && !this.isPeutJouer()) {
-            this.getListeTamagoshisEnCours().removeIf(t -> !t.consommeEnergy() || !t.consommeFun() || !t.vieillir());
+            this.getListeTamagoshisEnCours().removeIf(t -> !t.consommeEnergy() || !t.consommeFun() || !t.vieillir()); // Itérateur qui enlève les tamagoshis morts
             this.log("");
             this.nextCycle();
         }
     }
 
+    /**
+     * Lance le prochain cycle de jeu. Si la partie est terminée, lance {@link TamaGameGraphique#resultat()}.
+     */
     private void nextCycle() {
         if (this.getCycle() < Tamagoshi.getLifeTime() && !this.getListeTamagoshisEnCours().isEmpty()) {
             this.activerBoutons();
             this.incrementCycle();
             this.log("[" + messages.getString("cycle")+ " n°" + this.getCycle() + "]", 20, Color.BLACK);
             for (Tamagoshi tamagoshi : this.getListeTamagoshisEnCours()) {
-                tamagoshi.parler();
+                tamagoshi.parler(); // Met à jour le message des tamagoshis
             }
             for (TamaStage tamaStage : this.getListeTamaStage()) {
-                tamaStage.getTamaPane().updatePhase();
+                tamaStage.getTamaPane().updatePhase(); // Met à jour l'image des tamagoshis
             }
         } else {
-            this.resultat();
+            this.resultat(); // Si la partie est terminée.
         }
     }
 
@@ -235,7 +259,7 @@ public class TamaGameGraphique extends Application {
 
     /**
      * Génère la barre de menu avec la possibilité de lancer une nouvelle partie, de changer les paramètres, obtenir des informations sur le jeu et bien d'autres...
-     * @return La barre de menu générée.
+     * @return La barre de menu générée ({@link MenuBar }).
      */
     private MenuBar generateMenuBar() {
         // Menu "Jeu"
@@ -262,10 +286,15 @@ public class TamaGameGraphique extends Application {
         // Assemblage du menu
         MenuBar menuBar = new MenuBar();
         menuBar.getMenus().addAll(gameMenu, optionsMenu, helpMenu);
+
         return menuBar;
     }
 
+    /**
+     * Affiche une fenêtre sur laquelle on peut modifier les options du jeu.
+     */
     private void displayOptions() {
+        // Configuration de la fenêtre
         Stage optionsStage = new Stage();
         optionsStage.setResizable(false);
         optionsStage.setTitle(messages.getString("settings"));
@@ -354,11 +383,16 @@ public class TamaGameGraphique extends Application {
      * Affiche diverses informations sur le jeu comme son auteur.
      */
     private void displayInformations() {
+        // Configuration de la fenêtre
         Stage infoStage = new Stage();
         infoStage.setResizable(false);
         infoStage.setTitle(messages.getString("informations"));
+
+        // Ajout d'un label d'information
         Label infoLabel = new Label(messages.getString("gameInfos"));
         infoLabel.getStyleClass().add("label");
+
+        // Assemblage de la fenêtre
         Group infoGroup = new Group();
         infoGroup.getChildren().add(infoLabel);
         Scene infoScene = new Scene(infoGroup);
@@ -392,7 +426,7 @@ public class TamaGameGraphique extends Application {
     }
 
     /**
-     * Initialise la durée de vie des Tamagoshis (durée de la partie).
+     * Initialise la durée de vie des Tamagoshis (durée de la partie) avec {@link Tamagoshi#setLifeTime(int)}.
      */
     private void initLifeTime() {
         try {

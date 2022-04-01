@@ -10,11 +10,29 @@ import java.util.Objects;
 
 import static tamagoshi.jeu.TamaGame.messages;
 
+/**
+ * Classe qui gère l'état des {@link Tamagoshi} (leur image et message d'état).
+ */
 public class TamaPane extends BorderPane {
+    /**
+     * {@link Tamagoshi} contenu par la {@link TamaPane}.
+     */
     private final Tamagoshi tamagoshi;
+
+    /**
+     * Message du {@link Tamagoshi} (voir {@link Tamagoshi#getMessage()}).
+     */
     private final Label labelMessage;
+
+    /**
+     * {@link ImageView} contenant l'image du status du {@link Tamagoshi}.
+     */
     private final ImageView imageView;
 
+    /**
+     * Constructeur de la classe {@link TamaPane}.
+     * @param tamagoshi {@link Tamagoshi} aléatoire généré par une fabrique qui sera affecté à la {@link TamaPane}.
+     */
     public TamaPane(Tamagoshi tamagoshi) {
         Label labelNom = new Label(tamagoshi.getName());
         labelNom.getStyleClass().add("label");
@@ -28,6 +46,9 @@ public class TamaPane extends BorderPane {
         this.setTop(labelNom);
     }
 
+    /**
+     * Récupère l'image du tamagoshi en fonction de son énergie et de son fun.
+     */
     private void getPhase() {
         int energy = this.getTamagoshi().getEnergy();
         int fun = this.getTamagoshi().getFun();
@@ -49,22 +70,34 @@ public class TamaPane extends BorderPane {
         }
     }
 
+    /**
+     * Fait manger le {@link Tamagoshi} avec la méthode {@link Tamagoshi#mange()}.
+     */
     protected void manger() {
         this.getTamagoshi().mange();
         this.updateMessage();
     }
 
+    /**
+     * Joue avec le {@link Tamagoshi} avec la méthode {@link Tamagoshi#joue()}.
+     */
     protected void jouer() {
         this.getTamagoshi().joue();
         this.updateMessage();
     }
 
+    /**
+     * Met à jour l'image et le message de la {@link TamaPane}.
+     */
     protected void updatePhase() {
         this.getPhase();
         this.updatePicture();
         this.updateMessage();
     }
 
+    /**
+     * Met à jour l'image de la {@link TamaPane}.
+     */
     private void updatePicture() {
         this.getImageView().setFitWidth(400);
         this.getImageView().setFitHeight(400);
@@ -72,6 +105,9 @@ public class TamaPane extends BorderPane {
         this.getCenter().getStyleClass().add("customImageView");
     }
 
+    /**
+     * Met à jour le message de la {@link TamaPane}.
+     */
     private void updateMessage() {
         if (this.getTamagoshi().getAge() < Tamagoshi.getLifeTime()) {
             this.getLabelMessage().setText(this.getTamagoshi().getMessage());

@@ -6,6 +6,9 @@ import java.util.Random;
  * Tamagoshi qui change d'humeur change à chaque tour. L'humeur impacte la quantité de ressources consommées.
  */
 public class Bipolaire extends Tamagoshi {
+    /**
+     * Humeur du tamagoshi.
+     */
     private int humor;
 
     public Bipolaire(String name) {
@@ -37,6 +40,8 @@ public class Bipolaire extends Tamagoshi {
         }
         return super.consommeEnergy();
     }
+
+    // Getters et Setters
 
     public int getHumor() {
         return humor;

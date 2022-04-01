@@ -1,6 +1,9 @@
 package tamagoshi.tamagoshis;
 
 import tamagoshi.exceptions.NegativeLifeTimeException;
+import tamagoshi.graphic.TamaGameGraphique;
+import tamagoshi.graphic.TamaPane;
+import tamagoshi.graphic.TamaStage;
 import tamagoshi.jeu.TamaGame;
 
 import java.util.Random;
@@ -13,20 +16,46 @@ public abstract class Tamagoshi {
      * Age du tamagoshi.
      */
     private int age;
+
     /**
      * Energie maximale d'un tamagoshi.
      */
     private final int maxEnergy;
+
     /**
      * Energie du tamagoshi (ne peut être supérieure à maxEnergy).
      */
     private int energy;
+
+    /**
+     * Nom du tamagoshi.
+     */
     private final String name;
+
+    /**
+     * Durée de vie commune des tamagoshis.
+     */
     private static int lifeTime;
+
+    /**
+     * Fun du tamagoshi.
+     */
     private int fun;
+
+    /**
+     * Fun maximum du tamagoshi.
+     */
     private final int maxFun;
+
+    /**
+     * Message d'état du tamagoshi.
+     */
     private String message;
 
+    /**
+     * Constructeur de la classe {@link Tamagoshi}. Elle gère les {@link Tamagoshi} et toutes les classes qui en hérite. Il est utilisé dans une fabrique qui génère des {@link Tamagoshi} aléatoire et leur attribut un nom également aléatoire.
+     * @param name {@link String} égal au nom souhaité du tamagoshi.
+     */
     public Tamagoshi(String name) {
         this.age = 0;
         this.maxEnergy = new Random().nextInt(5) + 5;
@@ -74,9 +103,8 @@ public abstract class Tamagoshi {
 
     /**
      * Remonte le fun du tamagoshi.
-     * @return Le message de status du tamagoshi.
      */
-    public String joue() {
+    public void joue() {
         if (this.getFun() < this.getMaxFun()) {
             this.setFun(this.getFun() + (new Random().nextInt(4) + 2));
             if (this.getFun() > this.getMaxFun()) {
@@ -86,7 +114,6 @@ public abstract class Tamagoshi {
         } else {
             this.setMessage(TamaGame.messages.getString("imNotBored"));
         }
-        return this.getMessage();
     }
 
     /**
