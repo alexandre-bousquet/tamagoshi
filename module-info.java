@@ -1,7 +1,7 @@
-module fr.iut.tamagoshi {
+module fr.iut.bousqueta {
     requires java.logging;
-    requires javafx.controls;
     requires javafx.base;
+    requires javafx.controls;
     requires javafx.graphics;
 
     exports tamagoshi.tamagoshis;
