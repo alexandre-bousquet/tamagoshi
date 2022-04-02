@@ -1,9 +1,6 @@
 package tamagoshi.tamagoshis;
 
 import tamagoshi.exceptions.NegativeLifeTimeException;
-import tamagoshi.graphic.TamaGameGraphique;
-import tamagoshi.graphic.TamaPane;
-import tamagoshi.graphic.TamaStage;
 import tamagoshi.jeu.TamaGame;
 
 import java.util.Random;
