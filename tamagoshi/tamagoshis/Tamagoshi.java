@@ -1,6 +1,7 @@
 package tamagoshi.tamagoshis;
 
 import tamagoshi.exceptions.NegativeLifeTimeException;
+import tamagoshi.graphic.TamaGameGraphique;
 import tamagoshi.jeu.TamaGame;
 
 import java.util.Random;
@@ -8,7 +9,7 @@ import java.util.Random;
 /**
  * Tamagoshi lambda.
  */
-public abstract class Tamagoshi {
+public abstract class Tamagoshi extends TamaGameGraphique {
     /**
      * Age du tamagoshi.
      */

@@ -95,7 +95,8 @@ public class TamaGameGraphique extends Application {
     private void getProperties() {
         try (InputStream in = new FileInputStream(this.propertiesFileLocation)) {
             this.getProps().load(in);
-        } catch (IOException e) {
+            messages = ResourceBundle.getBundle("MessageBundle", new Locale(this.getProps().getProperty("language")));
+        } catch (IOException | RuntimeException e) {
             this.createProperties();
         }
     }
@@ -105,7 +106,7 @@ public class TamaGameGraphique extends Application {
      */
     private void createProperties() {
         try (OutputStream out = new FileOutputStream(this.propertiesFileLocation)) {
-            this.updateProperties(3, 10, "fr_FR");
+            this.updateSettingsProperties(3, 10, "fr_FR");
             this.getProps().store(out, "TamaGameGraphique config file");
         } catch (IOException e) {
             e.printStackTrace();
@@ -118,7 +119,7 @@ public class TamaGameGraphique extends Application {
      * @param lifeTime Durée de la partie (durée de vie des tamagoshis).
      * @param language Langue du jeu (FR ou EN).
      */
-    private void updateProperties(int difficulty, int lifeTime, String language) {
+    private void updateSettingsProperties(int difficulty, int lifeTime, String language) {
         try (OutputStream out = new FileOutputStream(this.propertiesFileLocation)) {
             this.getProps().setProperty("difficulty", String.valueOf(difficulty));
             this.getProps().setProperty("lifeTime", String.valueOf(lifeTime));
@@ -129,11 +130,47 @@ public class TamaGameGraphique extends Application {
         }
     }
 
+    private void ajouterScore(int newScore) {
+        try (OutputStream out = new FileOutputStream(this.propertiesFileLocation)) {
+            String difficulty_lifetime = this.getProps().getProperty("difficulty") + "-" + this.getProps().getProperty("lifeTime");
+            System.out.println(difficulty_lifetime);
+            try {
+                int storedScore = Integer.parseInt(this.getProps().getProperty(difficulty_lifetime));
+                if (newScore > storedScore) {
+                    this.getProps().setProperty(difficulty_lifetime, String.valueOf(newScore));
+                }
+                System.out.println(storedScore);
+            } catch (NullPointerException | NumberFormatException e) {
+                this.getProps().setProperty(difficulty_lifetime, String.valueOf(newScore));
+            }
+            this.getProps().store(out, "Score added");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            this.afficherScores();
+        }
+    }
+
+    private void afficherScores() {
+        StringBuilder scores = new StringBuilder();
+        for (int i = 3; i <= 9; i++) {
+            for (int j = 10; j <= 30; j++) {
+                int score;
+                try {
+                    score = Integer.parseInt(this.getProps().getProperty(i + "-" + j));
+                    scores.append("Difficulté ").append(i).append(" et durée de vie ").append(j).append(" : ").append(score).append("%\n");
+                } catch (NullPointerException | NumberFormatException e) {
+                    e.getMessage();
+                }
+            }
+        }
+        System.out.println(scores);
+    }
+
     /**
      * Initialise le jeu avec les méthodes précédentes.
      */
     private void initialisation() {
-        messages = ResourceBundle.getBundle("MessageBundle", new Locale(this.getProps().getProperty("language")));
         this.initLifeTime();
         this.initTamagoshis();
     }
@@ -261,6 +298,7 @@ public class TamaGameGraphique extends Application {
         }
         this.log(messages.getString("difficultyLevel") + " : " + this.getListeTamagoshisDepart().size(), 15, Color.BLACK);
         this.log(messages.getString("finalScore") + " : " + this.score() + "%", 15, Color.BLACK);
+        this.ajouterScore(this.score());
     }
 
     /**
@@ -286,8 +324,8 @@ public class TamaGameGraphique extends Application {
         Menu helpMenu = new Menu(messages.getString("help"));
         MenuItem aboutItem = new MenuItem(messages.getString("informations"));
         aboutItem.setOnAction(actionEvent -> this.displayInformations());
-        MenuItem helpItem = new MenuItem(messages.getString("help"));
-        helpMenu.getItems().addAll(aboutItem, helpItem);
+        //MenuItem helpItem = new MenuItem(messages.getString("help"));
+        helpMenu.getItems().addAll(aboutItem/*, helpItem*/);
 
         // Assemblage du menu
         MenuBar menuBar = new MenuBar();
@@ -372,7 +410,7 @@ public class TamaGameGraphique extends Application {
         saveButton.setLayoutX(20);
         saveButton.setLayoutY(300);
         saveButton.setOnAction(actionEvent -> {
-            this.updateProperties((int) difficultySlider.getValue(), (int) lifeTimeSlider.getValue(), langageSelected.get());
+            this.updateSettingsProperties((int) difficultySlider.getValue(), (int) lifeTimeSlider.getValue(), langageSelected.get());
             optionsStage.close();
         });
         saveGroup.getChildren().addAll(saveButton, saveInfoLabel);
@@ -397,11 +435,12 @@ public class TamaGameGraphique extends Application {
         // Ajout d'un label d'information
         Label infoLabel = new Label(messages.getString("gameInfos"));
         infoLabel.getStyleClass().add("label");
+        infoLabel.setMinWidth(800);
 
         // Assemblage de la fenêtre
         Group infoGroup = new Group();
         infoGroup.getChildren().add(infoLabel);
-        Scene infoScene = new Scene(infoGroup);
+        Scene infoScene = new Scene(infoGroup, 800, 150);
         infoScene.getStylesheets().add(Objects.requireNonNull(this.getClass().getResource("/tamagoshi/style.css")).toExternalForm());
         infoStage.setScene(infoScene);
         infoStage.show();
