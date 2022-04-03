@@ -99,8 +99,6 @@ public class TamaGameGraphique extends Application {
         try (InputStream in = new FileInputStream(this.propertiesFileLocation)) {
             this.getProps().load(in);
             messages = ResourceBundle.getBundle("MessageBundle", new Locale(this.getProps().getProperty("language")));
-            System.out.println(this.getProps().getProperty("language"));
-            System.out.println(messages.getLocale());
         } catch (IOException | RuntimeException e) {
             this.createProperties();
         }
