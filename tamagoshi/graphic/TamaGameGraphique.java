@@ -463,12 +463,12 @@ public class TamaGameGraphique extends Application {
         // Ajout d'un label d'information
         Label infoLabel = new Label(messages.getString("gameInfos"));
         infoLabel.getStyleClass().add("label");
-        infoLabel.setMinWidth(800);
+        infoLabel.setMinWidth(950);
 
         // Assemblage de la fenêtre
         Group infoGroup = new Group();
         infoGroup.getChildren().add(infoLabel);
-        Scene infoScene = new Scene(infoGroup, 800, 150);
+        Scene infoScene = new Scene(infoGroup, 950, 50);
         infoScene.getStylesheets().add(Objects.requireNonNull(this.getClass().getResource("/tamagoshi/style.css")).toExternalForm());
         infoStage.setScene(infoScene);
         infoStage.show();
