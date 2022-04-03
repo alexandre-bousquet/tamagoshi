@@ -36,4 +36,4 @@ jlink --module-path C:\Users\darkb\Desktop\JDK\javafx-sdk-17.0.2\lib  --add-modu
 ```
 Cependant, j'ai des problèmes avec le path de Jlink (pas mappé nativement sur Windows 10) et avec la détection de mon module. Cela aurait peut-être été plus simple en utilisant Maven.
 
-Le Jar Windows fonctionne très bien par contre celui sur Linux c'est moins sûr car je n'ai pas pû le tester dans de bonnes conditions.
+Le Jar Windows fonctionne très bien par contre celui sur Linux c'est moins sûr car je n'ai pas pû le tester dans de bonnes conditions. Il est possible de rencontrer un problème avec la persistance des données sur Linux uniquement.
