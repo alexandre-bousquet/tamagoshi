@@ -2,9 +2,9 @@
 Projet de jeu de tamagoshis en Java et JavaFX par Alexandre BOUSQUET, étudiant en LP APIDAE
 
 ## Documentations :
-- [Public](https://webinfo.iutmontp.univ-montp2.fr/~bousqueta/)
-- [Protected]()
-- [Private]()
+- [Public](https://webinfo.iutmontp.univ-montp2.fr/~bousqueta/tamagoshi-doc/doc_public)
+- [Protected](https://webinfo.iutmontp.univ-montp2.fr/~bousqueta/tamagoshi-doc/doc_protected)
+- [Private](https://webinfo.iutmontp.univ-montp2.fr/~bousqueta/tamagoshi-doc/doc_private)
 
 ## Exécutables :
 - Exécutables Windows et Linux disponible à cette adresse : [Lien](https://drive.google.com/drive/folders/1cwEwwberTpGBEMmCzUfcOwWwcdDTiJWO?usp=sharing)
@@ -15,7 +15,7 @@ Projet de jeu de tamagoshis en Java et JavaFX par Alexandre BOUSQUET, étudiant 
   - Iterator avec le removeIf() dans la méthode TamaGameGraphique.nextCycle()
   - Hashmap pour les langues du jeu
 - Modularisation du projet
-- i18n avec 2 langues (Français et Anglais)
+- i18n avec 2 langues (Français et Anglais avec Français par défaut)
 - Exceptions personnalisées NegativeLifeTimeException et TamagoshiNumberException pour la version CLI du jeu
 - Logger utilisé (avec modification du root logger) pour la version CLI du jeu
 - Persistance des données (paramètres et scores) avec fichier Properties
