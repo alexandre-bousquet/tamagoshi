@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"tamagoshi.jeu"},{"l":"tamagoshi.tamagoshis"},{"l":"tamagoshi.util"}]
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"m":"fr.iut.bousqueta","l":"tamagoshi.exceptions"},{"m":"fr.iut.bousqueta","l":"tamagoshi.graphic"},{"m":"fr.iut.bousqueta","l":"tamagoshi.jeu"},{"m":"fr.iut.bousqueta","l":"tamagoshi.tamagoshis"},{"m":"fr.iut.bousqueta","l":"tamagoshi.util"}]

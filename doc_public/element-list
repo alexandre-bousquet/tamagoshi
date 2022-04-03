@@ -1,3 +1,6 @@
+module:fr.iut.bousqueta
+tamagoshi.exceptions
+tamagoshi.graphic
 tamagoshi.jeu
 tamagoshi.tamagoshis
 tamagoshi.util
