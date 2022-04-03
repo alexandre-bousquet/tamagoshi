@@ -151,20 +151,47 @@ public class TamaGameGraphique extends Application {
         }
     }
 
+    /**
+     *
+     */
     private void afficherScores() {
-        StringBuilder scores = new StringBuilder();
+        // Configuration de la fenêtre
+        Stage scoreStage = new Stage();
+        scoreStage.setResizable(false);
+        scoreStage.setTitle(messages.getString("bestScores"));
+
+        // Ajout d'un label indiquant "Meilleurs scores"
+        Label scoreLabel = new Label(messages.getString("bestScores"));
+        scoreLabel.getStyleClass().add("label");
+        scoreLabel.setMinWidth(200);
+
+        // Ajout d'un TextFlow et d'une ScrollPane pour afficher le meilleur score dans chaque difficulté (s'il existe)
+        TextFlow scoreTextFlow = new TextFlow();
+        int nbScore = 0;
         for (int i = 3; i <= 9; i++) {
             for (int j = 10; j <= 30; j++) {
                 int score;
                 try {
                     score = Integer.parseInt(this.getProps().getProperty(i + "-" + j));
-                    scores.append("Difficulté ").append(i).append(" et durée de vie ").append(j).append(" : ").append(score).append("%\n");
+                    scoreTextFlow.getChildren().add(new Text(messages.getString("difficulty") + " (" +  i + ") / " + messages.getString("lifetime") + " (" +  j + ") : " + score + "%\n"));
+                    nbScore++;
                 } catch (NullPointerException | NumberFormatException e) {
                     e.getMessage();
                 }
             }
         }
-        System.out.println(scores);
+        ScrollPane scoreScrollPane = new ScrollPane();
+        scoreScrollPane.setVvalue(1);
+        scoreScrollPane.setContent(scoreTextFlow);
+        scoreScrollPane.setPadding(new Insets(10));
+        scoreScrollPane.vvalueProperty().bind(scoreScrollPane.heightProperty());
+
+        // Assemblage de la fenêtre
+        int tailleFenetre = 50 + (nbScore * 20);
+        Scene scoreScene = new Scene(scoreScrollPane, 300, tailleFenetre);
+        scoreScene.getStylesheets().add(Objects.requireNonNull(this.getClass().getResource("/tamagoshi/style.css")).toExternalForm());
+        scoreStage.setScene(scoreScene);
+        scoreStage.show();
     }
 
     /**
@@ -309,10 +336,10 @@ public class TamaGameGraphique extends Application {
         // Menu "Jeu"
         Menu gameMenu = new Menu(messages.getString("game"));
         MenuItem newGameItem = new MenuItem(messages.getString("newGame"));
-        newGameItem.setOnAction(actionEvent -> {
-            this.restart(this.getStage());
-        });
-        gameMenu.getItems().addAll(newGameItem);
+        newGameItem.setOnAction(actionEvent -> this.restart(this.getStage()));
+        MenuItem bestScores = new MenuItem(messages.getString("bestScores"));
+        bestScores.setOnAction(actionEvent -> this.afficherScores());
+        gameMenu.getItems().addAll(newGameItem, bestScores);
 
         // Menu "Options"
         Menu optionsMenu = new Menu(messages.getString("settings"));
