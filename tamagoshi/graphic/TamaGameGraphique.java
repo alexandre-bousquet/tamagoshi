@@ -99,17 +99,19 @@ public class TamaGameGraphique extends Application {
         try (InputStream in = new FileInputStream(this.propertiesFileLocation)) {
             this.getProps().load(in);
             messages = ResourceBundle.getBundle("MessageBundle", new Locale(this.getProps().getProperty("language")));
+            System.out.println(this.getProps().getProperty("language"));
+            System.out.println(messages.getLocale());
         } catch (IOException | RuntimeException e) {
             this.createProperties();
         }
     }
 
     /**
-     * Crée les propriétés du jeu avec les valeurs par défaut (difficulté = 3, lifetime = 10, langue = "fr_FR").
+     * Crée les propriétés du jeu avec les valeurs par défaut (difficulté = 3, lifetime = 10, langue = "fr_fr").
      */
     private void createProperties() {
         try (OutputStream out = new FileOutputStream(this.propertiesFileLocation)) {
-            this.updateSettingsProperties(3, 10, "fr_FR");
+            this.updateSettingsProperties(3, 10, "fr_fr");
             this.getProps().store(out, "TamaGameGraphique config file");
         } catch (IOException e) {
             e.printStackTrace();
@@ -411,8 +413,8 @@ public class TamaGameGraphique extends Application {
         // Langues (FR et EN)
         Group langageGroup = new Group();
         Map<String, String> languageMap = new HashMap<>();
-        languageMap.put(messages.getString("french"), "fr_FR");
-        languageMap.put(messages.getString("english"), "en_US");
+        languageMap.put(messages.getString("french"), "fr_fr");
+        languageMap.put(messages.getString("english"), "en_us");
         Label langageLabel = new Label(messages.getString("language"));
         langageLabel.setLayoutY(175);
         langageLabel.getStyleClass().add("label");
