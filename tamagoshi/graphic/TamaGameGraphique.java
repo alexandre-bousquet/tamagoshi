@@ -22,6 +22,9 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static tamagoshi.jeu.TamaGame.*;
 
+/**
+ * Classe principale du jeu en interface graphique. Elle paramètre et lance le jeu.
+ */
 public class TamaGameGraphique extends Application {
     /**
      * Console permettant les affichages.
@@ -130,16 +133,18 @@ public class TamaGameGraphique extends Application {
         }
     }
 
+    /**
+     * Ajour un le score obtenu à al liste des scores sauvegardés s'il est meilleur que l'ancien enregistré (s'il existe).
+     * @param newScore Score obtenu à la fin de la dernière partie.
+     */
     private void ajouterScore(int newScore) {
         try (OutputStream out = new FileOutputStream(this.propertiesFileLocation)) {
             String difficulty_lifetime = this.getProps().getProperty("difficulty") + "-" + this.getProps().getProperty("lifeTime");
-            System.out.println(difficulty_lifetime);
             try {
                 int storedScore = Integer.parseInt(this.getProps().getProperty(difficulty_lifetime));
                 if (newScore > storedScore) {
                     this.getProps().setProperty(difficulty_lifetime, String.valueOf(newScore));
                 }
-                System.out.println(storedScore);
             } catch (NullPointerException | NumberFormatException e) {
                 this.getProps().setProperty(difficulty_lifetime, String.valueOf(newScore));
             }
