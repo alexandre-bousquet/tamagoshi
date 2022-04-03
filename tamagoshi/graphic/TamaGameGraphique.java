@@ -146,13 +146,11 @@ public class TamaGameGraphique extends Application {
             this.getProps().store(out, "Score added");
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            this.afficherScores();
         }
     }
 
     /**
-     *
+     * Affiche une fenêtre avec les meilleurs scores pour chaque difficulté/durée de vie jouée.
      */
     private void afficherScores() {
         // Configuration de la fenêtre
@@ -180,6 +178,9 @@ public class TamaGameGraphique extends Application {
                 }
             }
         }
+        if (nbScore == 0) {
+            scoreTextFlow.getChildren().add(new Text(messages.getString("noScoreRegistered")));
+        }
         ScrollPane scoreScrollPane = new ScrollPane();
         scoreScrollPane.setVvalue(1);
         scoreScrollPane.setContent(scoreTextFlow);
@@ -187,7 +188,7 @@ public class TamaGameGraphique extends Application {
         scoreScrollPane.vvalueProperty().bind(scoreScrollPane.heightProperty());
 
         // Assemblage de la fenêtre
-        int tailleFenetre = 50 + (nbScore * 20);
+        int tailleFenetre = nbScore * 25;
         Scene scoreScene = new Scene(scoreScrollPane, 300, tailleFenetre);
         scoreScene.getStylesheets().add(Objects.requireNonNull(this.getClass().getResource("/tamagoshi/style.css")).toExternalForm());
         scoreStage.setScene(scoreScene);
