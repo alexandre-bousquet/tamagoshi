@@ -2,9 +2,9 @@
 Projet de jeu de tamagoshis en Java et JavaFX par Alexandre BOUSQUET, étudiant en LP APIDAE
 
 ## Documentations :
-- [Public]("./docs/doc_public")
-- [Protected](https://webinfo.iutmontp.univ-montp2.fr/~bousqueta/tamagoshi-doc/doc_protected)
-- [Private](https://webinfo.iutmontp.univ-montp2.fr/~bousqueta/tamagoshi-doc/doc_private)
+- [Public](https://alexandre-bousquet.github.io/tamagoshi/docs/doc_public)
+- [Protected](https://alexandre-bousquet.github.io/tamagoshi/docs/doc_protected)
+- [Private](https://alexandre-bousquet.github.io/tamagoshi/docs/doc_private)
 
 ## Exécutables :
 - Exécutables Windows et Linux disponible à cette adresse : [Lien](https://drive.google.com/drive/folders/1cwEwwberTpGBEMmCzUfcOwWwcdDTiJWO?usp=sharing)
